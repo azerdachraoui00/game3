@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الدخيل 🕵️ لعبة تونسية</title>
+<style>
+:root{
+  --bg:#fdf6ec; --card:#ffffff; --ink:#241a12; --muted:#8a7a68;
+  --accent:#e2231a; --accent2:#0f6b3f; --gold:#c9971c;
+  --danger:#e2231a; --safe:#0f6b3f;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c150f; --card:#2a2019; --ink:#f3e9dc; --muted:#b6a692;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c150f; --card:#2a2019; --ink:#f3e9dc; --muted:#b6a692;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{
+  margin:0; min-height:100%; background:var(--bg); color:var(--ink);
+  font-family:"Segoe UI", Tahoma, Geneva, sans-serif;
+  display:flex; flex-direction:column; align-items:center;
+  padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));
+}
+html,body{height:100%;}
+.wrap{width:100%; max-width:420px; display:flex; flex-direction:column; gap:16px; flex:1;}
+h1{text-align:center; font-size:1.6rem; margin:6px 0 0;}
+.sub{text-align:center; color:var(--muted); margin:0 0 8px; font-size:.95rem;}
+.card{
+  background:var(--card); border-radius:18px; padding:20px;
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+}
+label{display:block; margin-bottom:8px; font-weight:600;}
+input[type=number], input[type=text]{
+  width:100%; padding:14px; border-radius:12px; border:2px solid #e6d9c6;
+  background:transparent; color:var(--ink); font-size:1.05rem; margin-bottom:10px;
+  text-align:right;
+}
+input:focus{outline:2px solid var(--gold);}
+button{
+  width:100%; padding:16px; border:none; border-radius:14px;
+  font-size:1.05rem; font-weight:700; cursor:pointer; color:#fff;
+  background:var(--accent); transition:transform .1s;
+}
+button:active{transform:scale(.97);}
+button.secondary{background:transparent; color:var(--accent); border:2px solid var(--accent);}
+button.green{background:var(--accent2);}
+.namefield{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
+.namefield span{width:26px; text-align:center; color:var(--gold); font-weight:700;}
+.hidden{display:none !important;}
+.reveal-card{
+  background:linear-gradient(160deg,var(--accent2),#0a4d2c);
+  color:#fff; border-radius:20px; padding:36px 20px; text-align:center;
+  min-height:220px; display:flex; flex-direction:column; justify-content:center; gap:10px;
+  user-select:none; -webkit-user-select:none; touch-action:manipulation;
+}
+.reveal-card.imposter{background:linear-gradient(160deg,var(--accent),#8c0f09);}
+.reveal-card .big{font-size:2rem; font-weight:800;}
+.reveal-card .small{font-size:1rem; opacity:.9;}
+.pname{text-align:center; font-size:1.3rem; font-weight:700; margin:0;}
+.progress{text-align:center; color:var(--muted); font-size:.9rem;}
+.placeholder{
+  background:var(--card); border:2px dashed #cbb98f; border-radius:20px;
+  padding:36px 20px; text-align:center; color:var(--muted); min-height:220px;
+  display:flex; align-items:center; justify-content:center; font-size:1.05rem;
+}
+footer{text-align:center; color:var(--muted); font-size:.8rem; margin-top:auto; padding-top:10px;}
+.placeholder{flex-direction:column; gap:16px;}
+.reveal-card{gap:18px;}
+.reveal-card button, .placeholder button{
+  width:auto; padding:14px 26px; font-size:1rem;
+}
+.placeholder button{background:var(--gold);}
+.reveal-card button{background:#fff; color:var(--accent2); font-weight:800;}
+.reveal-card.imposter button{color:var(--accent);}
+.row{display:flex; gap:10px;}
+.badge{
+  display:inline-block; background:var(--gold); color:#fff; border-radius:20px;
+  padding:4px 12px; font-size:.85rem; margin-bottom:8px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🕵️ الدخيل</h1>
+  <p class="sub">لعبة الكلمة التونسية</p>
+
+  <!-- SCREEN 1: player count -->
+  <div id="screen-count" class="card">
+    <label for="count">قداش عدد اللاعبين؟</label>
+    <input type="number" id="count" min="3" max="15" value="5">
+    <button id="btnToNames">التالي</button>
+  </div>
+
+  <!-- SCREEN 2: names -->
+  <div id="screen-names" class="card hidden">
+    <label>أدخل أسماء اللاعبين</label>
+    <div id="namesList"></div>
+    <button id="btnStart">ابدأ اللعبة</button>
+    <button class="secondary" id="btnBackCount" style="margin-top:10px;">رجوع</button>
+  </div>
+
+  <!-- SCREEN 3: game / reveal -->
+  <div id="screen-game" class="hidden" style="display:flex; flex-direction:column; gap:14px;">
+    <div class="badge" id="playersLeftBadge"></div>
+    <p class="pname" id="currentPlayerName"></p>
+    <p class="progress" id="progressText"></p>
+
+    <div id="placeholderCard" class="placeholder">
+      <span>اضغط الزر باش تشوف دورك 👇</span>
+      <button id="btnReveal">👁 شوف دورك</button>
+    </div>
+    <div id="revealCard" class="reveal-card hidden">
+      <div class="small" id="revealTop"></div>
+      <div class="big" id="revealMain"></div>
+      <button id="btnHideNext">✅ خبّيت، عدّي للاعب التالي</button>
+    </div>
+
+    <button id="btnNewWord" class="secondary">🔄 كلمة جديدة (ريسات)</button>
+    <button id="btnRestart" class="secondary">↩️ لاعبين جداد</button>
+  </div>
+
+  <footer>مرة تنساو الدخيل، مرة يلقاكم 😉</footer>
+</div>
+
+<script>
+const WORDS = [
+"كرسي","صابون","شاشية","جبة","ملحفة","فوطة",
+"كسكسي","بريك","لبلابي","مقروض","حلوة الزڨوڨو","ماء الورد",
+"ياسمين","فرشة","مكنسة","مرقة","هريسة","زيت الزيتون",
+"تمر","عصفور جنة","كعك الورقة","بقلاوة","صيادية","كفتاجي",
+"برنوس","سروال","بلغة","دار","سوق","حمام",
+"جامع","صحن","كوب","إبريق","مسبحة","عود",
+"دربوكة","قفة","حصير","فخار","جرة","نول",
+"مشمش مجفف","تين مجفف","خبز الطابونة","شاي بالصنوبر","قهوة تركي","عصير ليمون",
+"كارطة (بطاقة)","جنان (حديقة)","مرسى (ميناء)","سيدي بوسعيد","جامع الزيتونة","دقة (طبل)",
+"محبس (خاتم)","طاولة","باب","شباك","سرير","خزانة",
+"كنبة","مكتب","رف","درج","مرآة","مصباح",
+"ساعة","سجادة","ستارة","شمعة","صندوق","سلة",
+"دلو","جرس","قفل","مفتاح","لوحة","صورة",
+"تمثال","مزهرية","وسيم","سخان","وسادة","بطانية",
+"كاس","فنجان","طبق","ملعقة","شوكة","سكين",
+"مغرفة","ملقط","سماعة","جال شعر","رامي","شكبة",
+"دومينو","اونو","مقلاة","طنجرة","غطاء","بريز",
+"كرهبة","زبدة","وعاء","معجون اسنان","قارورة","زجاجة",
+"خلاط","فرن","ثلاجة","كونجيلطور","غلاية","مطرقة",
+"مفك","بافت","منشار","تورنيفيس","فأس","بهيم",
+"قطوس","بنان","شوفان","مقص","مسطرة","ميزان",
+"لوحة شطرنج","درع","شمية","جارية","ممسحة","فرشاة",
+"خرطوم","سلم","عربة","مسمار","تن","شربة",
+"سلسلة","سلك","حبل","محرمة","كتاب","كلاسط",
+"كراس","قلم","ممحاة","براية","طبشورة","وراق بيوض",
+"خلعة","هاتف","حاسوب","كاميرا","ميكروفون","شاحن",
+"بطارية","باوربانك","فلاش","CD","كومند","بروجيكتور",
+"تلفاز","راديو","ماوس","كاسك","قميص","معطف",
+"فستان","قبعة","حذاء","صندل","شبشب","جورب",
+"حزام","قفاز","خوذة","حقيبة","محفظة","مظلة",
+"نظارة","خاتم","سوار","قلادة","مشط","عطر",
+"منشفة","سيارة","شاحنة","حافلة","دراجة","عجلة",
+"محرك","كرة","مضرب","شبكة","مرمى","صفارة",
+"دمبل","بار","نرد","دمية","لعبة","مكعب",
+"بالون","طائرة","روبوت","مسدس","قوس","سهم",
+"سيف","عصا","حجر","صخرة","خشب","غصن",
+"زهرة","شجرة","بذرة","ثمرة","جوزة","عظم",
+"قرن","ريشة","تراب","خزنة","خيمة","بوصلة",
+"منظار","تلسكوب","مجهر","مروحة","مكيف","مدفأة",
+"مكواة","غسالة","حامل"
+];
+
+let players = [];
+let imposters = [];
+let currentWord = "";
+let currentIndex = 0;
+
+const screenCount = document.getElementById('screen-count');
+const screenNames = document.getElementById('screen-names');
+const screenGame = document.getElementById('screen-game');
+const namesList = document.getElementById('namesList');
+const countInput = document.getElementById('count');
+
+document.getElementById('btnToNames').addEventListener('click', () => {
+  let n = parseInt(countInput.value, 10);
+  if(!n || n < 3) n = 3;
+  if(n > 15) n = 15;
+  countInput.value = n;
+  namesList.innerHTML = '';
+  for(let i=1;i<=n;i++){
+    const row = document.createElement('div');
+    row.className = 'namefield';
+    row.innerHTML = `<span>${i}</span><input type="text" class="pInput" placeholder="لاعب ${i}">`;
+    namesList.appendChild(row);
+  }
+  screenCount.classList.add('hidden');
+  screenNames.classList.remove('hidden');
+});
+
+document.getElementById('btnBackCount').addEventListener('click', () => {
+  screenNames.classList.add('hidden');
+  screenCount.classList.remove('hidden');
+});
+
+document.getElementById('btnStart').addEventListener('click', () => {
+  const inputs = document.querySelectorAll('.pInput');
+  players = Array.from(inputs).map((inp,i) => inp.value.trim() || `لاعب ${i+1}`);
+  startRound(true);
+  screenNames.classList.add('hidden');
+  screenGame.classList.remove('hidden');
+});
+
+document.getElementById('btnRestart').addEventListener('click', () => {
+  screenGame.classList.add('hidden');
+  screenCount.classList.remove('hidden');
+});
+
+document.getElementById('btnNewWord').addEventListener('click', () => startRound(false));
+
+function pickImposters(){
+  const count = players.length;
+  const numImp = count > 6 ? 3 : 1;
+  const idx = [...Array(count).keys()];
+  const chosen = [];
+  for(let k=0;k<numImp && idx.length>0;k++){
+    const r = Math.floor(Math.random()*idx.length);
+    chosen.push(idx.splice(r,1)[0]);
+  }
+  return chosen;
+}
+
+function startRound(isFirst){
+  imposters = pickImposters();
+  currentWord = WORDS[Math.floor(Math.random()*WORDS.length)];
+  currentIndex = 0;
+  renderPlayer();
+}
+
+function renderPlayer(){
+  document.getElementById('currentPlayerName').textContent = players[currentIndex];
+  document.getElementById('progressText').textContent = `اللاعب ${currentIndex+1} من ${players.length}`;
+  document.getElementById('playersLeftBadge').textContent =
+    (players.length > 6 ? "3 دخلاء في اللعبة" : "دخيل واحد في اللعبة");
+  document.getElementById('placeholderCard').classList.remove('hidden');
+  document.getElementById('revealCard').classList.add('hidden');
+}
+
+const placeholderCard = document.getElementById('placeholderCard');
+const revealCard = document.getElementById('revealCard');
+const revealTop = document.getElementById('revealTop');
+const revealMain = document.getElementById('revealMain');
+
+function showRole(){
+  const isImposter = imposters.includes(currentIndex);
+  revealCard.classList.toggle('imposter', isImposter);
+  if(isImposter){
+    revealTop.textContent = "دورك:";
+    revealMain.textContent = "أنت الدخيل 🕵️";
+  }else{
+    revealTop.textContent = "الكلمة السرية:";
+    revealMain.textContent = currentWord;
+  }
+  placeholderCard.classList.add('hidden');
+  revealCard.classList.remove('hidden');
+}
+
+// Reveal only on a deliberate tap of the button
+document.getElementById('btnReveal').addEventListener('click', showRole);
+
+// Hiding the word and moving to the next player happen together,
+// so the word is never left on screen when the phone gets passed on.
+document.getElementById('btnHideNext').addEventListener('click', () => {
+  revealCard.classList.add('hidden');
+  placeholderCard.classList.remove('hidden');
+  currentIndex++;
+  if(currentIndex >= players.length){
+    currentIndex = 0;
+    alert("الجميع شافوا دورهم! ابداو المناقشة وحاولو تكتشفوا الدخيل 🔍");
+  }
+  renderPlayer();
+});
+</script>
+</body>
+</html>
