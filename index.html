@@ -3,334 +3,575 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>الدخيل 🕵️ لعبة تونسية</title>
+<meta name="theme-color" content="#0a0e1f">
+<title>Tastira — لعبة الدخيل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fdf6ec;--card:#fff;--ink:#241a12;--muted:#8a7a68;--accent:#e2231a;--accent2:#0f6b3f;--gold:#c9971c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c150f;--card:#2a2019;--ink:#f3e9dc;--muted:#b6a692}}
-:root[data-theme="dark"]{--bg:#1c150f;--card:#2a2019;--ink:#f3e9dc;--muted:#b6a692}
-html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
-*{box-sizing:border-box}
-body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Geneva,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px 16px}
-.wrap{width:100%;max-width:420px;display:flex;flex-direction:column;gap:14px;flex:1}
-h1{text-align:center;font-size:1.6rem;margin:6px 0 0}
-.sub{text-align:center;color:var(--muted);margin:0 0 6px;font-size:.95rem}
-.card{background:var(--card);border-radius:18px;padding:20px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:10px}
-label{display:block;font-weight:600}
-input{width:100%;padding:14px;border-radius:12px;border:2px solid #e6d9c6;background:transparent;color:var(--ink);font-size:1.05rem;text-align:right}
-button{width:100%;padding:15px;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;color:#fff;background:var(--accent)}
-button:active{transform:scale(.97)}
-button.secondary{background:transparent;color:var(--accent);border:2px solid var(--accent)}
-button.green{background:var(--accent2)}
-button.gold{background:var(--gold)}
-button.opt{background:transparent;color:var(--ink);border:2px solid var(--gold)}
-.namefield{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.namefield span{width:26px;text-align:center;color:var(--gold);font-weight:700}
+:root{
+  --bg0:#070a17;--bg1:#0e1430;--ink:#f4f1ea;--muted:#9aa3c0;
+  --glass:rgba(255,255,255,.055);--line:rgba(255,255,255,.11);
+  --red:#ff4d5e;--orange:#ff9f43;--gold:#ffd166;--green:#2ee59d;--violet:#8b7bff;
+  --grad:linear-gradient(135deg,#ff4d5e 0%,#ff9f43 100%);
+  --gradG:linear-gradient(135deg,#17c98a 0%,#2ee59d 100%);
+  --gradGold:linear-gradient(135deg,#ffb703,#ffd166);
+  --r:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;color:var(--ink);font-family:"Cairo","Segoe UI",Tahoma,sans-serif;background:var(--bg0);
+  padding:calc(env(safe-area-inset-top,0px) + 18px) 16px calc(env(safe-area-inset-bottom,0px) + 18px);
+  display:flex;justify-content:center;overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;z-index:0;border-radius:50%;filter:blur(90px);opacity:.55;pointer-events:none;animation:float 14s ease-in-out infinite alternate}
+body::before{width:380px;height:380px;background:#ff4d5e55;top:-120px;right:-120px}
+body::after{width:420px;height:420px;background:#6a5cff44;bottom:-160px;left:-140px;animation-delay:-6s}
+@keyframes float{to{transform:translate(40px,30px) scale(1.12)}}
+.wrap{position:relative;z-index:1;width:100%;max-width:440px;display:flex;flex-direction:column;gap:14px}
+
+/* logo */
+.brand{text-align:center;padding:6px 0 2px;transition:.3s}
+.logo{font-family:"Poppins","Cairo",sans-serif;font-weight:800;font-size:3rem;letter-spacing:1px;line-height:1;margin:0;direction:ltr;
+  background:linear-gradient(135deg,#fff 0%,#ffd166 45%,#ff4d5e 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 24px rgba(255,77,94,.35))}
+.logo i{font-style:normal;-webkit-text-fill-color:initial;display:inline-block;animation:peek 3s ease-in-out infinite}
+@keyframes peek{50%{transform:translateY(-4px) rotate(-8deg)}}
+.tag{color:var(--muted);font-size:.92rem;margin:6px 0 0;letter-spacing:.3px}
+body.compact .logo{font-size:1.7rem}body.compact .tag{display:none}
+
+/* glass card */
+.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);padding:20px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07);display:flex;flex-direction:column;gap:14px}
+.screen{animation:rise .38s cubic-bezier(.2,.8,.2,1)}
 .hidden{display:none !important}
-.screen{display:flex;flex-direction:column;gap:14px}
-.reveal-card{background:linear-gradient(160deg,var(--accent2),#0a4d2c);color:#fff;border-radius:20px;padding:30px 20px;text-align:center;min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:16px}
-.reveal-card.imposter{background:linear-gradient(160deg,var(--accent),#8c0f09)}
-.reveal-card .big{font-size:2rem;font-weight:800}
-.reveal-card button{background:#fff;color:var(--accent2);width:auto;margin:0 auto;padding:14px 24px}
-.reveal-card.imposter button{color:var(--accent)}
-.placeholder{background:var(--card);border:2px dashed #cbb98f;border-radius:20px;padding:30px 20px;text-align:center;color:var(--muted);min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
-.placeholder button{background:var(--gold);width:auto;padding:14px 26px}
-.pname{text-align:center;font-size:1.3rem;font-weight:700;margin:0}
-.progress{text-align:center;color:var(--muted);font-size:.9rem;margin:0}
-.badge{align-self:flex-start;background:var(--gold);color:#fff;border-radius:20px;padding:4px 12px;font-size:.85rem}
-.timer{text-align:center;font-size:3.4rem;font-weight:800;font-variant-numeric:tabular-nums;direction:ltr}
-.timer.low{color:var(--accent)}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+h2{margin:0;font-size:1.25rem;font-weight:900}
+.muted{color:var(--muted);font-size:.9rem;margin:0}
+.center{text-align:center}
+
+/* buttons */
+.btn{width:100%;border:none;border-radius:16px;padding:15px 16px;font:inherit;font-weight:800;font-size:1.05rem;color:#fff;cursor:pointer;
+  background:var(--grad);box-shadow:0 10px 26px rgba(255,77,94,.32);transition:transform .12s,filter .2s}
+.btn:active{transform:scale(.97)}.btn:hover{filter:brightness(1.07)}
+.btn.good{background:var(--gradG);box-shadow:0 10px 26px rgba(46,229,157,.25);color:#052b1d}
+.btn.gold{background:var(--gradGold);box-shadow:0 10px 26px rgba(255,183,3,.25);color:#3a2800}
+.btn.bad{background:linear-gradient(135deg,#ff3b4f,#b3122a)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:var(--glass)}
+.btn.sm{padding:11px 14px;font-size:.95rem;border-radius:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* stepper */
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:18px;padding:12px 14px}
+.opt .t{font-weight:800}.opt .s{display:block;color:var(--muted);font-size:.78rem;font-weight:600;margin-top:2px}
+.stepper{display:flex;align-items:center;gap:10px;direction:ltr}
+.stepper button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font-size:1.4rem;font-weight:800;cursor:pointer}
+.stepper button:active{transform:scale(.9)}
+.stepper b{min-width:30px;text-align:center;font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+
+/* inputs */
+input[type=text]{width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:rgba(0,0,0,.25);color:var(--ink);font:inherit;font-size:1.02rem;text-align:right;outline:none;transition:.2s}
+input[type=text]:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,209,102,.12)}
+.namefield{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.av{--c:#888;flex:none;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 60%,#000));box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.av.sm{width:26px;height:26px;font-size:.8rem}
+
+details summary{cursor:pointer;font-weight:800;color:var(--gold);list-style:none}
+details summary::-webkit-details-marker{display:none}
+.rules{line-height:1.9;font-size:.92rem;margin-top:10px;color:#d9dcec}
+
+/* game */
+.topbar{display:flex;gap:8px;flex-wrap:wrap}
+.pill{background:var(--glass);border:1px solid var(--line);border-radius:30px;padding:5px 13px;font-size:.82rem;font-weight:700;color:var(--gold)}
+.who{display:flex;align-items:center;justify-content:center;gap:12px}
+.who .av{width:52px;height:52px;font-size:1.4rem}
+.who h2{font-size:1.6rem}
+.placeholder{border:2px dashed rgba(255,255,255,.2);border-radius:24px;min-height:250px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;color:var(--muted)}
+.placeholder .big-ic{font-size:3.4rem;animation:peek 3s ease-in-out infinite}
+.reveal-card{border-radius:24px;padding:26px 18px;text-align:center;min-height:250px;display:flex;flex-direction:column;justify-content:center;gap:14px;
+  background:linear-gradient(160deg,#12a874,#075c3f);box-shadow:0 20px 50px rgba(18,168,116,.3);animation:flip .55s cubic-bezier(.2,.8,.2,1)}
+.reveal-card.imposter{background:linear-gradient(160deg,#ff3b4f,#6d0a1a);box-shadow:0 20px 50px rgba(255,59,79,.3)}
+@keyframes flip{from{transform:perspective(700px) rotateY(90deg);opacity:0}to{transform:none;opacity:1}}
+.reveal-card .small{opacity:.8;font-weight:700}
+.reveal-card .emoji{font-size:3.8rem;line-height:1}
+.reveal-card .line{font-size:1.45rem;font-weight:800;margin:3px 0}
+.reveal-card .line small{display:block;opacity:.7;font-size:.75rem;font-weight:700}
+.reveal-card button{background:#fff;color:#073b29;width:auto;margin:6px auto 0;padding:13px 22px;box-shadow:none}
+.reveal-card.imposter button{color:#8c0f1c}
+.reveal-card .big{font-size:2.1rem;font-weight:900}
+
+/* talk */
+.starter{border-radius:20px;padding:14px 16px;text-align:center;background:linear-gradient(135deg,rgba(255,209,102,.2),rgba(255,77,94,.15));border:1px solid rgba(255,209,102,.4)}
+.starter small{display:block;color:var(--gold);font-weight:700;margin-bottom:4px}
+.starter b{font-size:1.5rem;font-weight:900}
+.ring{position:relative;width:190px;height:190px;margin:0 auto}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .bg{stroke:rgba(255,255,255,.09)}
+.ring .fg{stroke:url(#tg);stroke-dasharray:339.29;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.ring .time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.7rem;font-weight:900;font-variant-numeric:tabular-nums;direction:ltr}
+.ring.low .time{color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.chip{background:var(--bg);border-radius:20px;padding:6px 14px;font-weight:600}
-.chip.dead{text-decoration:line-through;opacity:.5}
-table{width:100%;border-collapse:collapse}
-td,th{padding:8px 6px;text-align:right;border-bottom:1px solid #e6d9c6}
-td:last-child,th:last-child{text-align:center;font-weight:800;color:var(--gold)}
-.msg{text-align:center;font-size:1.15rem;font-weight:700;line-height:1.7;margin:0}
-.win{color:var(--accent2)}.lose{color:var(--accent)}
-footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:auto;padding-top:10px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:30px;padding:4px 12px 4px 5px;font-weight:700;font-size:.92rem}
+.chip.dead{opacity:.4;text-decoration:line-through}
+
+/* vote */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vbtn{display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;border:1.5px solid var(--line);background:var(--glass);color:var(--ink);font:inherit;font-weight:800;cursor:pointer;text-align:right;transition:.15s}
+.vbtn:active{transform:scale(.95);border-color:var(--red);background:rgba(255,77,94,.15)}
+.vbar{height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+.vbar i{display:block;height:100%;background:var(--grad);border-radius:8px}
+.vrow{display:flex;align-items:center;gap:10px}.vrow .nm{flex:1;font-weight:700}.vrow .n{font-weight:900;color:var(--gold);min-width:20px;text-align:left}
+
+/* result */
+.msg{text-align:center;font-size:1.12rem;font-weight:800;line-height:1.8;margin:0}
+.win{color:var(--green)}.lose{color:var(--red)}
+.judge{border:1.5px dashed var(--gold);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;background:rgba(255,209,102,.06)}
+.secret{border-radius:18px;padding:14px;text-align:center;background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.4);animation:rise .3s}
+.secret .emoji{font-size:2.6rem}.secret div.l{font-weight:800;font-size:1.15rem}
+.score{display:flex;flex-direction:column;gap:8px}
+.srow{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border-radius:16px;padding:9px 12px;border:1px solid transparent}
+.srow.first{border-color:rgba(255,209,102,.5);background:rgba(255,209,102,.1)}
+.srow .rk{width:26px;text-align:center;font-weight:900;color:var(--muted)}
+.srow .nm{flex:1;font-weight:800}.srow .pt{font-weight:900;font-size:1.15rem}
+.d{font-size:.78rem;font-weight:800;padding:2px 8px;border-radius:20px;margin-right:4px}
+.d.p{background:rgba(46,229,157,.18);color:var(--green)}.d.n{background:rgba(255,77,94,.18);color:var(--red)}
+
+/* verdict */
+.court{font-size:3.2rem;text-align:center;animation:peek 2.5s infinite}
+.cats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.cat{border:1px solid var(--line);background:var(--glass);color:var(--ink);font:inherit;font-weight:700;font-size:.82rem;border-radius:30px;padding:6px 12px;cursor:pointer}
+.cat.on{background:var(--grad);border-color:transparent}
+.chal{min-height:130px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.3rem;font-weight:900;line-height:1.7;padding:18px;border-radius:20px;
+  background:linear-gradient(160deg,rgba(139,123,255,.25),rgba(255,77,94,.18));border:1px solid var(--line)}
+.chal.spin{animation:shake .12s infinite;opacity:.8}
+@keyframes shake{25%{transform:translateX(3px)}75%{transform:translateX(-3px)}}
+
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:6px 0}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translateX(-50%) translateY(30px);background:#fff;color:#111;font-weight:800;padding:12px 20px;border-radius:30px;box-shadow:0 12px 30px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.35s;z-index:50;max-width:92%;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.fx{position:fixed;top:-40px;z-index:60;font-size:1.7rem;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>🕵️ الدخيل</h1>
-  <p class="sub">لعبة الكلمة — بالتونسي والعربي والإنجليزي</p>
+  <header class="brand">
+    <h1 class="logo">Tastira <i>🕵️</i></h1>
+    <p class="tag">لعبة الدخيل · شكون فيكم ما يعرفش الكلمة؟</p>
+  </header>
 
-  <div id="screen-count" class="card screen">
-    <label for="count">قداش عدد اللاعبين؟</label>
-    <input type="number" id="count" min="3" max="15" value="5">
-    <button id="btnToNames">التالي</button>
+  <!-- SETUP -->
+  <section id="screen-setup" class="card screen">
+    <h2>🎮 جهّز اللعبة</h2>
+    <div class="opt"><div><span class="t">عدد اللاعبين</span><span class="s">من 3 لين 15</span></div>
+      <div class="stepper"><button id="pPlus">+</button><b id="vPlayers">5</b><button id="pMinus">−</button></div></div>
+    <div class="opt"><div><span class="t">🕵️ عدد الدخلاء</span><span class="s" id="impHint"></span></div>
+      <div class="stepper"><button id="iPlus">+</button><b id="vImp">1</b><button id="iMinus">−</button></div></div>
+    <button class="btn" id="btnToNames">التالي ←</button>
     <details>
-      <summary style="cursor:pointer;font-weight:700;color:var(--gold)">📜 شرح الدخلاء والنقاط</summary>
-      <div style="line-height:1.9;font-size:.95rem;margin-top:8px">
-        <b>عدد الدخلاء:</b><br>
-        3–5 لاعبين: دخيل واحد<br>6–7 لاعبين: 2 دخلاء<br>8–9 لاعبين: 3 دخلاء<br>10 وأكثر: 4 دخلاء<br><br>
-        <b>الجولة:</b> نقاش 3 دقايق ← تصويت سرّي ← الأكثر أصوات يخرج. الجماعة تربح كان كشفت كل الدخلاء. الدخلاء يربحو كان عددهم تساوى أو فاق عدد الأبرياء.<br><br>
+      <summary>📜 شرح اللعبة والنقاط</summary>
+      <div class="rules">
+        <b>الفكرة:</b> كل لاعب يشوف الكلمة السرية في تليفونو كان الدخلاء ما يعرفوهاش. تحكيو على الكلمة من غير ما تقولوها، والدخيل يحاول يتخبّى.<br><br>
+        <b>الجولة:</b> نقاش 3 دقايق (لاعب يبدا النقاش) ← تصويت سرّي ← الأكثر أصوات يخرج. الجماعة تربح كان كشفت كل الدخلاء. الدخلاء يربحو كان عددهم تساوى أو فاق عدد الأبرياء.<br><br>
+        <b>الفرصة الأخيرة 🎯:</b> كان تكشف دخيل، يكتب أو يقول الكلمة السرية. الحَكَم (اللي ماسك التليفون) يشوف الكلمة ويقرّر صحيحة ولا غالطة. كان صحيحة، الدخلاء يربحو اللعبة.<br><br>
         <b>النقاط (كل لعبة):</b><br>
         ✅ كشفتو دخيل في الجولة 1: الأبرياء +3 (و+1 زيادة لكل من صوّت على دخيل)، الدخلاء −2<br>
         ✅ كشفتو الدخلاء بعد الجولة 1: الأبرياء +1 (و+1 زيادة لكل من صوّت على دخيل)، الدخلاء +2<br>
         🕵️ الدخلاء ربحو: كل دخيل +5، والأبرياء −4<br><br>
-        <b>بعد 4 ألعاب:</b> الأقل نقاط يتحكم عليه بحكم تونسي 🏛️
+        <b>بعد 4 ألعاب:</b> الأقل نقاط يتحكم عليه بحكم 🏛️
       </div>
     </details>
-  </div>
+  </section>
 
-  <div id="screen-names" class="card screen hidden">
-    <label>أدخل أسماء اللاعبين</label>
+  <!-- NAMES -->
+  <section id="screen-names" class="card screen hidden">
+    <h2>👥 أسماء اللاعبين</h2>
     <div id="namesList"></div>
-    <button id="btnStart">ابدأ اللعبة</button>
-    <button class="secondary" id="btnBackCount">رجوع</button>
-  </div>
+    <button class="btn" id="btnStart">🚀 ابدأ اللعبة</button>
+    <button class="btn ghost sm" id="btnBackCount">→ رجوع</button>
+  </section>
 
-  <div id="screen-game" class="screen hidden">
-    <div class="badge" id="playersLeftBadge"></div>
-    <p class="pname" id="currentPlayerName"></p>
-    <p class="progress" id="progressText"></p>
+  <!-- GAME / REVEAL -->
+  <section id="screen-game" class="screen hidden" style="display:flex;flex-direction:column;gap:14px">
+    <div class="topbar"><span class="pill" id="badgeGame"></span><span class="pill" id="badgeImp"></span></div>
+    <div class="who"><span id="curAv"></span><div><h2 id="currentPlayerName"></h2><p class="muted" id="progressText"></p></div></div>
     <div id="placeholderCard" class="placeholder">
-      <span>اضغط الزر باش تشوف دورك 👇</span>
-      <button id="btnReveal">👁 شوف دورك</button>
+      <span class="big-ic">🔒</span>
+      <span>خُذ التليفون وتأكّد ما يشوفك حد، بعد اضغط 👇</span>
+      <button class="btn" id="btnReveal">👁 شوف دورك</button>
     </div>
     <div id="revealCard" class="reveal-card hidden">
-      <div id="revealTop"></div>
-      <div class="big" id="revealMain"></div>
-      <button id="btnHideNext">✅ خبّيت، عدّي للاعب التالي</button>
+      <div class="small" id="revealTop"></div>
+      <div id="revealMain"></div>
+      <button class="btn" id="btnHideNext">✅ خبّيت، عدّي للاعب التالي</button>
     </div>
-  </div>
+    <button class="btn ghost sm" id="btnChangeWord">🔄 بدّل الكلمة</button>
+  </section>
 
-  <div id="screen-talk" class="card screen hidden">
+  <!-- TALK -->
+  <section id="screen-talk" class="card screen hidden">
     <p class="msg">🗣️ وقت المناقشة</p>
-    <p class="progress" id="roundInfo"></p>
-    <div class="timer" id="timer">03:00</div>
-    <div class="chips" id="aliveChips"></div>
-    <button class="green" id="btnTimer">▶️ ابدأ 3 دقايق</button>
-    <button id="btnToVote">🗳️ على التصويت</button>
-  </div>
-
-  <div id="screen-vote" class="card screen hidden">
-    <p class="progress" id="voteProgress"></p>
-    <p class="pname" id="voterName"></p>
-    <p class="progress">على شكون تصوّت؟ (سرّي)</p>
-    <div id="voteOptions" class="screen"></div>
-  </div>
-
-  <div id="screen-result" class="card screen hidden">
-    <p class="msg" id="resultMsg"></p>
-    <div id="resultVotes" class="chips"></div>
-    <div id="scoreBox" class="hidden">
-      <p class="progress" id="gameInfo"></p>
-      <table><thead><tr><th>اللاعب</th><th>النقاط</th></tr></thead><tbody id="scoreBody"></tbody></table>
+    <p class="muted center" id="roundInfo"></p>
+    <div class="starter"><small>🎤 اللي يبدا النقاش في هالجولة</small><b id="starterName"></b></div>
+    <div class="ring" id="ring">
+      <svg viewBox="0 0 120 120"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#ff4d5e"/></linearGradient></defs>
+        <circle class="bg" cx="60" cy="60" r="54"/><circle class="fg" id="ringFg" cx="60" cy="60" r="54"/></svg>
+      <div class="time" id="timer">03:00</div>
     </div>
-    <button id="btnContinue" class="green"></button>
-    <button id="btnNewWord" class="secondary hidden">🔄 كلمة جديدة (نفس اللاعبين)</button>
-    <button id="btnVerdict" class="gold hidden">🏛️ شوف الحكم</button>
-    <button id="btnRestart" class="secondary hidden">↩️ لاعبين جداد</button>
-  </div>
+    <div class="chips" id="aliveChips"></div>
+    <button class="btn good" id="btnTimer">▶️ ابدأ 3 دقايق</button>
+    <button class="btn" id="btnToVote">🗳️ على التصويت</button>
+    <button class="btn ghost sm" id="btnChangeWord2">🔄 بدّل الكلمة (نعاودو من الأول)</button>
+  </section>
 
-  <div id="screen-verdict" class="card screen hidden">
-    <p class="msg">🏛️ المحكمة</p>
-    <p class="progress">الأقل نقاط بعد 4 ألعاب</p>
-    <div class="timer" id="vName" style="font-size:2rem"></div>
-    <p class="msg" id="vHokm"></p>
-    <button class="gold" id="btnOtherHokm">🎲 حكم آخر</button>
-    <button class="green" id="btnAgain">🔄 دورة جديدة (النقاط من 0)</button>
-    <button class="secondary" id="btnRestart2">↩️ لاعبين جداد</button>
-  </div>
+  <!-- VOTE -->
+  <section id="screen-vote" class="card screen hidden">
+    <p class="muted center" id="voteProgress"></p>
+    <div class="who"><span id="voterAv"></span><h2 id="voterName"></h2></div>
+    <p class="muted center">على شكون تصوّت؟ (سرّي 🤫)</p>
+    <div id="voteOptions" class="vgrid"></div>
+  </section>
 
-  <footer>مرة تنساو الدخيل، مرة يلقاكم 😉</footer>
+  <!-- RESULT -->
+  <section id="screen-result" class="card screen hidden">
+    <p class="msg" id="resultMsg"></p>
+    <div id="resultVotes" style="display:flex;flex-direction:column;gap:10px"></div>
+
+    <div id="judgeBox" class="judge hidden">
+      <p class="muted center">🎯 الدخيل يكتب (ولا يقول) الكلمة، والحَكَم يقرّر</p>
+      <input type="text" id="guessInput" placeholder="الكلمة اللي كتبها الدخيل (اختياري)" autocomplete="off">
+      <button class="btn ghost sm" id="btnShowWord">👁 شوف الكلمة السرّية (للحَكَم فقط)</button>
+      <div id="secretBox" class="secret hidden"></div>
+      <div class="row2">
+        <button class="btn good" id="btnJudgeYes">✅ صحيحة</button>
+        <button class="btn bad" id="btnJudgeNo">❌ غالطة</button>
+      </div>
+    </div>
+
+    <div id="scoreBox" class="hidden">
+      <p class="muted center" id="gameInfo"></p>
+      <div class="score" id="scoreBody"></div>
+    </div>
+    <button id="btnContinue" class="btn good"></button>
+    <button id="btnNewWord" class="btn hidden">🔄 لعبة جديدة (كلمة جديدة)</button>
+    <button id="btnVerdict" class="btn gold hidden">🏛️ شوف الحكم</button>
+    <button id="btnRestart" class="btn ghost sm hidden">↩️ لاعبين جداد</button>
+  </section>
+
+  <!-- VERDICT -->
+  <section id="screen-verdict" class="card screen hidden">
+    <div class="court">🏛️</div>
+    <p class="msg">المحكمة</p>
+    <p class="muted center">الأقل نقاط بعد 4 ألعاب</p>
+    <div class="chips" id="loserChips"></div>
+    <div class="cats" id="cats"></div>
+    <div class="chal" id="vHokm">اضغط على «اسحب حكم» 🎲</div>
+    <button class="btn gold" id="btnOtherHokm">🎲 اسحب حكم</button>
+    <button class="btn good" id="btnAgain">🔄 دورة جديدة (النقاط من 0)</button>
+    <button class="btn ghost sm" id="btnRestart2">↩️ لاعبين جداد</button>
+  </section>
+
+  <footer>Tastira · مرة تنساو الدخيل، مرة يلقاكم 😉</footer>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
-const LANGS=[["🇹🇳","بالتونسي"],["🇦🇪","بالعربية"],["🇬🇧","English"]];
-const WORDS = [["دار","منزل","House"],["باب","باب","Door"],["شباك","نافذة","Window"],["مفتاح","مفتاح","Key"],["قفل","قفل","Lock"],["حيط","جدار","Wall"],["سقف","سقف","Ceiling"],["أرض","أرضية","Floor"],["ضو","ضوء","Light"],["لمبة","مصباح","Lamp"],["سرير","سرير","Bed"],["مخدة","وسادة","Pillow"],["غطاء","غطاء","Blanket"],["دولاب","خزانة","Wardrobe"],["مراية","مرآة","Mirror"],["زربية","سجادة","Carpet"],["كنبة","أريكة","Sofa"],["ستارة","ستارة","Curtain"],["ساعة","ساعة","Clock"],["تلفزة","تلفاز","TV"],["كاس","كوب","Cup"],["صحن","طبق","Plate"],["مغرف","ملعقة","Spoon"],["فورشيطة","شوكة","Fork"],["سكين","سكين","Knife"],["كسرونة","قدر","Pot"],["مقلاة","مقلاة","Pan"],["طنجرة","قدر ضغط","Pressure cooker"],["ثلاجة","ثلاجة","Fridge"],["فور","فرن","Oven"],["ميكرووند","فرن ميكروويف","Microwave"],["بلندر","خلاط","Blender"],["قنينة","زجاجة","Bottle"],["علبة","علبة","Box"],["كيس","كيس","Bag"],["خبز","خبز","Bread"],["ماء","ماء","Water"],["حليب","حليب","Milk"],["سكر","سكر","Sugar"],["ملح","ملح","Salt"],["كسوة","ملابس","Clothes"],["تيشورت","قميص قصير","T-shirt"],["قميجة","قميص","Shirt"],["سروال","بنطال","Pants"],["جين","جينز","Jeans"],["شورت","سروال قصير","Shorts"],["جاكيت","سترة","Jacket"],["كابو","معطف","Coat"],["سبادري","حذاء رياضي","Sneakers"],["صباط","حذاء","Shoes"],["شلاكة","شبشب","Slippers"],["جورب","جوارب","Socks"],["قبعة","قبعة","Hat"],["كاسكيت","قبعة رياضية","Cap"],["حزام","حزام","Belt"],["ساعة يد","ساعة يد","Watch"],["نظارات","نظارات","Glasses"],["محفظة","محفظة","Wallet"],["مظلة","مظلة","Umbrella"],["منشفة","منشفة","Towel"],["صابون","صابون","Soap"],["شامبو","شامبو","Shampoo"],["فرشاة أسنان","فرشاة أسنان","Toothbrush"],["معجون أسنان","معجون أسنان","Toothpaste"],["مشط","مشط","Comb"],["فرشاة","فرشاة","Brush"],["عطر","عطر","Perfume"],["مزيل عرق","مزيل العرق","Deodorant"],["منديل","منديل","Tissue"],["فوطة","منشفة","Towel"],["موس","شفرة حلاقة","Razor"],["مجفف شعر","مجفف شعر","Hair dryer"],["كريم","كريم","Cream"],["شامبو شعر","شامبو","Hair shampoo"],["كرهبة","سيارة","Car"],["كار","حافلة","Bus"],["تاكسي","سيارة أجرة","Taxi"],["موتو","دراجة نارية","Motorcycle"],["بيك","دراجة","Bicycle"],["عجلة","عجلة","Wheel"],["موتور","محرك","Engine"],["بنزين","وقود","Fuel"],["طريق","طريق","Road"],["باركينغ","موقف سيارات","Parking"],["إشارة","إشارة مرور","Traffic light"],["محطة","محطة","Station"],["تذكرة","تذكرة","Ticket"],["سفر","سفر","Travel"],["مطار","مطار","Airport"],["مغازة","متجر","Store"],["مارشي","سوق","Market"],["فلوس","مال","Money"],["كارت","بطاقة","Card"],["كاش","نقدًا","Cash"],["فاتورة","فاتورة","Bill"],["كادو","هدية","Gift"],["باكو","حزمة","Pack"],["قفة","سلة تسوق","Shopping basket"],["كتاب","كتاب","Book"],["ستيلو","قلم","Pen"],["قلم رصاص","قلم رصاص","Pencil"],["جوم","ممحاة","Eraser"],["برية","مبراة","Sharpener"],["مسطرة","مسطرة","Ruler"],["كوس","مثلث هندسي","Set square"],["بركار","فرجار","Compass"],["آلة حاسبة","آلة حاسبة","Calculator"],["قلم تلوين","قلم تلوين","Colored pencil"],["هايلايتر","قلم تمييز","Highlighter"],["قلم سبورة","قلم سبورة","Whiteboard marker"],["طبشير","طبشور","Chalk"],["لصق","صمغ","Glue"],["مقص","مقص","Scissor"],["ملف بلاستيك","ملف بلاستيكي","Plastic folder"],["ساك","حقيبة","Bag"],["ساك ظهر","حقيبة ظهر","Backpack"],["ستوش","حافظة أقلام","Pencil pouch"],["سبورة","سبورة","Board"],["طباشير أبيض","طباشير أبيض","White chalk"],["طلسة","ممسحة السبورة","Board eraser"],["كرسي","كرسي","Chair"],["طاولة","طاولة","Table"],["نقوص","جرس","Bell"],["ورقة","ورقة","Paper"],["كمبيوتر","حاسوب","Computer"],["لابتوب","حاسوب محمول","Laptop"],["بي سي","حاسوب شخصي","PC"],["كلافية","لوحة مفاتيح","Keyboard"],["souris","فأرة","Mouse"],["شرجور","شاحن","Charger"],["بطارية","بطارية","Battery"],["باور بانك","بطارية متنقلة","Power bank"],["سماعات","مكبرات صوت","Speakers"],["casque","سماعة رأس","Headset"],["micro","ميكروفون","Microphone"],["webcam","كاميرا ويب","Webcam"],["imprimante","طابعة","Printer"],["modem","مودم","Modem"],["Wi-Fi","شبكة لاسلكية","Wi-Fi"],["Bluetooth","بلوتوث","Bluetooth"],["ويندوز","ويندوز","Windows"],["لينكس","لينكس","Linux"],["تطبيق","تطبيق","Application"],["كروم","كروم","Chrome"],["تليفون","هاتف","Phone"],["سمارتفون","هاتف ذكي","Smartphone"],["شاشة","شاشة","Screen"],["كابل","كابل","Cable"],["واتساب","واتساب","WhatsApp"],["مسانجر","ماسنجر","Messenger"],["إنستغرام","إنستغرام","Instagram"],["فيسبوك","فيسبوك","Facebook"],["تيك توك","تيك توك","TikTok"],["يوتيوب","يوتيوب","YouTube"],["تطبيق","تطبيق","App"]];
-const TALK_SECONDS = 180;
+const WORDS = [["دار", "منزل", "House", "🏠"], ["باب", "باب", "Door", "🚪"], ["شباك", "نافذة", "Window", "🪟"], ["مفتاح", "مفتاح", "Key", "🔑"], ["قفل", "قفل", "Lock", "🔒"], ["حيط", "جدار", "Wall", "🧱"], ["سقف", "سقف", "Ceiling", "🏚️"], ["أرض", "أرضية", "Floor", "🪵"], ["ضو", "ضوء", "Light", "🔆"], ["لمبة", "مصباح", "Lamp", "💡"], ["سرير", "سرير", "Bed", "🛏️"], ["مخدة", "وسادة", "Pillow", "🛌"], ["غطاء", "غطاء", "Blanket", "🧶"], ["دولاب", "خزانة", "Wardrobe", "👔"], ["مراية", "مرآة", "Mirror", "🪞"], ["زربية", "سجادة", "Carpet", "🟧"], ["كنبة", "أريكة", "Sofa", "🛋️"], ["ستارة", "ستارة", "Curtain", "🎭"], ["ساعة", "ساعة", "Clock", "⏰"], ["تلفزة", "تلفاز", "TV", "📺"], ["كاس", "كوب", "Cup", "🥤"], ["صحن", "طبق", "Plate", "🍽️"], ["مغرف", "ملعقة", "Spoon", "🥄"], ["فورشيطة", "شوكة", "Fork", "🍴"], ["سكين", "سكين", "Knife", "🔪"], ["كسرونة", "قدر", "Pot", "🍲"], ["مقلاة", "مقلاة", "Pan", "🍳"], ["طنجرة", "قدر ضغط", "Pressure cooker", "🥘"], ["ثلاجة", "ثلاجة", "Fridge", "🧊"], ["فور", "فرن", "Oven", "🔥"], ["ميكرووند", "فرن ميكروويف", "Microwave", "📟"], ["بلندر", "خلاط", "Blender", "🌀"], ["قنينة", "زجاجة", "Bottle", "🍾"], ["علبة", "علبة", "Box", "📦"], ["كيس", "كيس", "Bag", "🛍️"], ["خبز", "خبز", "Bread", "🍞"], ["ماء", "ماء", "Water", "💧"], ["حليب", "حليب", "Milk", "🥛"], ["سكر", "سكر", "Sugar", "🍬"], ["ملح", "ملح", "Salt", "🧂"], ["كسوة", "ملابس", "Clothes", "👗"], ["تيشورت", "قميص قصير", "T-shirt", "👕"], ["قميجة", "قميص", "Shirt", "👔"], ["سروال", "بنطال", "Pants", "👖"], ["جين", "جينز", "Jeans", "👖"], ["شورت", "سروال قصير", "Shorts", "🩳"], ["جاكيت", "سترة", "Jacket", "🧥"], ["كابو", "معطف", "Coat", "🧥"], ["سبادري", "حذاء رياضي", "Sneakers", "👟"], ["صباط", "حذاء", "Shoes", "👞"], ["شلاكة", "شبشب", "Slippers", "🩴"], ["جورب", "جوارب", "Socks", "🧦"], ["قبعة", "قبعة", "Hat", "🎩"], ["كاسكيت", "قبعة رياضية", "Cap", "🧢"], ["حزام", "حزام", "Belt", "🪢"], ["ساعة يد", "ساعة يد", "Watch", "⌚"], ["نظارات", "نظارات", "Glasses", "👓"], ["محفظة", "محفظة", "Wallet", "👛"], ["مظلة", "مظلة", "Umbrella", "☂️"], ["منشفة", "منشفة", "Towel", "🛁"], ["صابون", "صابون", "Soap", "🧼"], ["شامبو", "شامبو", "Shampoo", "🧴"], ["فرشاة أسنان", "فرشاة أسنان", "Toothbrush", "🪥"], ["معجون أسنان", "معجون أسنان", "Toothpaste", "🦷"], ["مشط", "مشط", "Comb", "💇"], ["فرشاة", "فرشاة", "Brush", "🖌️"], ["عطر", "عطر", "Perfume", "🌸"], ["مزيل عرق", "مزيل العرق", "Deodorant", "🧴"], ["منديل", "منديل", "Tissue", "🤧"], ["موس", "شفرة حلاقة", "Razor", "🪒"], ["مجفف شعر", "مجفف شعر", "Hair dryer", "💨"], ["كريم", "كريم", "Cream", "🧴"], ["كرهبة", "سيارة", "Car", "🚗"], ["كار", "حافلة", "Bus", "🚌"], ["تاكسي", "سيارة أجرة", "Taxi", "🚕"], ["موتو", "دراجة نارية", "Motorcycle", "🏍️"], ["بيك", "دراجة", "Bicycle", "🚲"], ["عجلة", "عجلة", "Wheel", "🛞"], ["موتور", "محرك", "Engine", "⚙️"], ["بنزين", "وقود", "Fuel", "⛽"], ["طريق", "طريق", "Road", "🛣️"], ["باركينغ", "موقف سيارات", "Parking", "🅿️"], ["إشارة", "إشارة مرور", "Traffic light", "🚦"], ["محطة", "محطة", "Station", "🚉"], ["تذكرة", "تذكرة", "Ticket", "🎫"], ["سفر", "سفر", "Travel", "🧳"], ["مطار", "مطار", "Airport", "✈️"], ["مغازة", "متجر", "Store", "🏪"], ["مارشي", "سوق", "Market", "🛒"], ["فلوس", "مال", "Money", "💵"], ["كارت", "بطاقة", "Card", "💳"], ["كاش", "نقدًا", "Cash", "💰"], ["فاتورة", "فاتورة", "Bill", "🧾"], ["كادو", "هدية", "Gift", "🎁"], ["قفة", "سلة تسوق", "Shopping basket", "🧺"], ["كتاب", "كتاب", "Book", "📖"], ["ستيلو", "قلم", "Pen", "🖊️"], ["قلم رصاص", "قلم رصاص", "Pencil", "✏️"], ["جوم", "ممحاة", "Eraser", "🧽"], ["برية", "مبراة", "Sharpener", "🔧"], ["مسطرة", "مسطرة", "Ruler", "📏"], ["كوس", "مثلث هندسي", "Set square", "📐"], ["آلة حاسبة", "آلة حاسبة", "Calculator", "🧮"], ["قلم تلوين", "قلم تلوين", "Colored pencil", "🖍️"], ["هايلايتر", "قلم تمييز", "Highlighter", "🟨"], ["طبشير", "طبشور", "Chalk", "🤍"], ["لصق", "صمغ", "Glue", "🧴"], ["مقص", "مقص", "Scissor", "✂️"], ["ملف بلاستيك", "ملف بلاستيكي", "Plastic folder", "📁"], ["ساك", "حقيبة", "Handbag", "👜"], ["ساك ظهر", "حقيبة ظهر", "Backpack", "🎒"], ["ستوش", "حافظة أقلام", "Pencil pouch", "👝"], ["سبورة", "سبورة", "Board", "🧑‍🏫"], ["طلسة", "ممسحة السبورة", "Board eraser", "🧽"], ["كرسي", "كرسي", "Chair", "🪑"], ["طاولة", "طاولة", "Table", "🍽️"], ["نقوص", "جرس", "Bell", "🔔"], ["ورقة", "ورقة", "Paper", "📄"], ["كمبيوتر", "حاسوب", "Computer", "🖥️"], ["لابتوب", "حاسوب محمول", "Laptop", "💻"], ["كلافية", "لوحة مفاتيح", "Keyboard", "⌨️"], ["souris", "فأرة", "Mouse", "🖱️"], ["شرجور", "شاحن", "Charger", "🔌"], ["بطارية", "بطارية", "Battery", "🔋"], ["باور بانك", "بطارية متنقلة", "Power bank", "🪫"], ["سماعات", "مكبرات صوت", "Speakers", "🔊"], ["casque", "سماعة رأس", "Headset", "🎧"], ["micro", "ميكروفون", "Microphone", "🎤"], ["webcam", "كاميرا ويب", "Webcam", "📹"], ["imprimante", "طابعة", "Printer", "🖨️"], ["modem", "مودم", "Modem", "📡"], ["Wi-Fi", "شبكة لاسلكية", "Wi-Fi", "📶"], ["Bluetooth", "بلوتوث", "Bluetooth", "🔷"], ["ويندوز", "ويندوز", "Windows", "🪟"], ["لينكس", "لينكس", "Linux", "🐧"], ["تطبيق", "تطبيق", "App", "📱"], ["كروم", "كروم", "Chrome", "🌐"], ["تليفون", "هاتف", "Phone", "☎️"], ["سمارتفون", "هاتف ذكي", "Smartphone", "📱"], ["شاشة", "شاشة", "Screen", "🖥️"], ["كابل", "كابل", "Cable", "🔌"], ["واتساب", "واتساب", "WhatsApp", "💬"], ["مسانجر", "ماسنجر", "Messenger", "💭"], ["إنستغرام", "إنستغرام", "Instagram", "📸"], ["فيسبوك", "فيسبوك", "Facebook", "👍"], ["تيك توك", "تيك توك", "TikTok", "🎵"], ["يوتيوب", "يوتيوب", "YouTube", "▶️"], ["كسكسي", "كسكس", "Couscous", "🍛"], ["بريك", "بريك", "Brik", "🥟"], ["لبلابي", "لبلابي", "Lablabi", "🍲"], ["هريسة", "هريسة", "Harissa", "🌶️"], ["مقروض", "مقروض", "Makroud", "🍯"], ["بيتزا", "بيتزا", "Pizza", "🍕"], ["برغر", "همبرغر", "Burger", "🍔"], ["سلاطة", "سلطة", "Salad", "🥗"], ["قهوة", "قهوة", "Coffee", "☕"], ["أتاي", "شاي", "Tea", "🍵"], ["عصير", "عصير", "Juice", "🧃"], ["تفاح", "تفاح", "Apple", "🍎"], ["موز", "موز", "Banana", "🍌"], ["برتقال", "برتقال", "Orange", "🍊"], ["فراولة", "فراولة", "Strawberry", "🍓"], ["دلاع", "بطيخ", "Watermelon", "🍉"], ["عنب", "عنب", "Grapes", "🍇"], ["طماطم", "طماطم", "Tomato", "🍅"], ["بطاطا", "بطاطس", "Potato", "🥔"], ["جزر", "جزر", "Carrot", "🥕"], ["بيضة", "بيضة", "Egg", "🥚"], ["جبن", "جبن", "Cheese", "🧀"], ["دجاج", "دجاج", "Chicken", "🍗"], ["حوت", "سمك", "Fish", "🐟"], ["عسل", "عسل", "Honey", "🍯"], ["ثوم", "ثوم", "Garlic", "🧄"], ["بصل", "بصل", "Onion", "🧅"], ["زيتون", "زيتون", "Olive", "🫒"], ["تمر", "تمر", "Dates", "🌴"], ["شكلاطة", "شوكولاتة", "Chocolate", "🍫"], ["جلاس", "بوظة", "Ice cream", "🍦"], ["غاتو", "كعكة", "Cake", "🎂"], ["قطوس", "قط", "Cat", "🐱"], ["كلب", "كلب", "Dog", "🐶"], ["عود", "حصان", "Horse", "🐴"], ["جمل", "جمل", "Camel", "🐪"], ["بقرة", "بقرة", "Cow", "🐄"], ["خروف", "خروف", "Sheep", "🐑"], ["عصفور", "عصفور", "Bird", "🐦"], ["سبع", "أسد", "Lion", "🦁"], ["فيل", "فيل", "Elephant", "🐘"], ["قرد", "قرد", "Monkey", "🐒"], ["حنش", "ثعبان", "Snake", "🐍"], ["فار", "فأر", "Mouse (animal)", "🐭"], ["دجاجة", "دجاجة", "Hen", "🐔"], ["حمار", "حمار", "Donkey", "🫏"], ["نحلة", "نحلة", "Bee", "🐝"], ["ذبانة", "ذبابة", "Fly", "🪰"], ["تمساح", "تمساح", "Crocodile", "🐊"], ["دلفان", "دلفين", "Dolphin", "🐬"], ["نسر", "نسر", "Eagle", "🦅"], ["طبيب", "طبيب", "Doctor", "🧑‍⚕️"], ["معلم", "معلم", "Teacher", "👨‍🏫"], ["بوليسي", "شرطي", "Policeman", "👮"], ["طيار", "طيار", "Pilot", "🧑‍✈️"], ["نجار", "نجار", "Carpenter", "🪚"], ["طباخ", "طباخ", "Cook", "👨‍🍳"], ["فلاح", "مزارع", "Farmer", "🧑‍🌾"], ["ممرض", "ممرض", "Nurse", "👩‍⚕️"], ["مهندس", "مهندس", "Engineer", "👷"], ["سبيطار", "مستشفى", "Hospital", "🏥"], ["مدرسة", "مدرسة", "School", "🏫"], ["جامع", "مسجد", "Mosque", "🕌"], ["بلاج", "شاطئ", "Beach", "🏖️"], ["بحر", "بحر", "Sea", "🌊"], ["صحراء", "صحراء", "Desert", "🏜️"], ["جبل", "جبل", "Mountain", "⛰️"], ["غابة", "غابة", "Forest", "🌲"], ["ملعب", "ملعب", "Stadium", "🏟️"], ["جنينة", "حديقة", "Garden", "🌳"], ["سينما", "سينما", "Cinema", "🎬"], ["مكتبة", "مكتبة", "Library", "📚"], ["بوقالة", "مخبزة", "Bakery", "🥖"], ["صيدلية", "صيدلية", "Pharmacy", "💊"], ["بنكة", "بنك", "Bank", "🏦"], ["كورة", "كرة القدم", "Football", "⚽"], ["باسكيت", "كرة السلة", "Basketball", "🏀"], ["تنس", "تنس", "Tennis", "🎾"], ["عوم", "سباحة", "Swimming", "🏊"], ["جري", "جري", "Running", "🏃"], ["بوكس", "ملاكمة", "Boxing", "🥊"], ["شطرنج", "شطرنج", "Chess", "♟️"], ["كارطة", "ورق اللعب", "Cards", "🃏"], ["بلايستيشن", "بلايستيشن", "PlayStation", "🎮"], ["قيتارة", "غيتار", "Guitar", "🎸"], ["بيانو", "بيانو", "Piano", "🎹"], ["طبل", "طبل", "Drum", "🥁"], ["شمس", "شمس", "Sun", "☀️"], ["قمر", "قمر", "Moon", "🌙"], ["نجمة", "نجمة", "Star", "⭐"], ["شتا", "مطر", "Rain", "🌧️"], ["تلج", "ثلج", "Snow", "❄️"], ["رعد", "رعد", "Thunder", "⚡"], ["نار", "نار", "Fire", "🔥"], ["وردة", "وردة", "Flower", "🌹"], ["شجرة", "شجرة", "Tree", "🌳"], ["غيمة", "سحابة", "Cloud", "☁️"], ["بالون", "بالون", "Balloon", "🎈"], ["كاميرا", "كاميرا", "Camera", "📷"], ["ساعة منبّه", "منبه", "Alarm clock", "⏰"], ["مغناطيس", "مغناطيس", "Magnet", "🧲"], ["صاروخ", "صاروخ", "Rocket", "🚀"], ["روبو", "روبوت", "Robot", "🤖"], ["ملك", "ملك", "King", "👑"], ["سيف", "سيف", "Sword", "⚔️"], ["خاتم", "خاتم", "Ring", "💍"]];
+const CH = {
+mix:{label:"🎲 منوّعة",items:[
+"تغنّي أغنية بصوت عالي قدّام الكل 🎤","تعمل 20 تمرين ضغط 💪","تقلّد القطوس وتموّ لمدة دقيقة 🐱","تغسل الصحون بعد الماكلة 🍽️","تشري القهوة للجماعة ☕","تحكي بالفرنساوي كان لمدة 10 دقايق 🇫🇷","تعمل رقصة غريبة قدّام الكل 💃","تمدح كل واحد من الجماعة بجملة حلوة 🥰","تعيّط للجماعة «سي فلان» بصوت جبّاد كل ما يحكي 😂","تمشي كيف البطريق لين الباب 🐧","تتصوّر سيلفي بوجه مضحك وتخليها ستوري 📸","تحكي سرّ صغير ما عمرك حكيتو 🤫","تقرا مقطع من كتاب بصوت مذيع نشرة الأخبار 📰",
+"قلد صوت دجاجة بتبيض 🐔","مثّل قرد جوعان 🐒","قلد بكاء طفل صغير 👶","الحس كوعك لمدة 10 ثواني 💪","تكلم مع الحيطة واقنعها تشتري منك تليفون 🧱📱","شيل فردة شرابك والبسها جوانت في إيدك 🧦","قلد صوت ذبابة بتزن فوق راس واحد من اللعيبة 🪰","امشي في الأوضة كأنك عارض أزياء 💃","أقنع صباع رجلك الصغير إنه ما يزعلش من صباعك الكبير 🦶","الحس مناخيرك بلسانك ولو مش عارف حاول لمدة دقيقة كاملة 👅","مثل إنك دبانة لزقت في عسل ومش عارفة تطلع 🍯","امشي على أربع واعمل نفسك قطة خايفة من المكنسة الكهربائية 🐱","شّم صباع رجلك الكبير واعمل نفسك دخت وأغمى عليك من الريحة 😵","مثل إنك بتصور إعلان لشامبو ضد القشرة بكل إثارة 🧴","تكلم مع صباعك الصغير واقنعه إنه هو أحسن صباع في العالم ☝️","امشي في الأوضة كأنك طفل صغير لسه بيتعلم يمشي ومثقّل في الحفاضة 🍼","اعمل نفسك بطل فيلم هندي بيموت في 5 دقايق بالحركة البطيئة 🎬","كل حتة عيش واعمل نفسك مسموم وبتبص للي جنبك بنظرة خيانة 🍞","اقف على رجل واحدة ونط واقعد اصرخ «أنا بطاطساية مقلية» 🍟","اعمل نفسك فرخة بتدور على بيضتها الضايعة تحت كراسي الموجودين 🥚","تكلم مع جزمتك واقنعها إنك مش هتخونها مع جزمة جديدة 👟","تكلم وأنت جاعد لسانك لبرا طول الجولة الجاية 😛",
+"يقلّد واحد من الشلّة لمدة دقيقة.","يحكي نكتة، وإذا حتى واحد ما ضحكش يعاود وحدة أخرى.","يحكي بلهجة مختلفة لمدة 5 دقايق.","يحكي مع كرسي وكأنّه حبيبتو لمدة دقيقة.","يقول 5 حاجات باهية على الشخص اللي على يمينو.","يعمل تحدّي الضحك: يحاول يضحّك المجموعة في 30 ثانية.","يمثّل مشهد بكاء على خاطر آخر قطعة بيتزا 🍕","يبعث رسالة صوتية مضحكة لصاحبو، بعد ما يوافق على المحتوى.","يحكي لمدة دقيقتين من غير ما يقول «إي» ولا «لا».","يعمل خطاب حبّ لقرعة ماء.","يحكي حكاية عادية وكأنّه في فيلم أكشن."]},
+funny:{label:"😂 مضحكة",items:[
+"يغنّي أغنية بصوت عالي.","يعمل رقصة TikTok من غير موسيقى.","يقلّد قرد لمدة 30 ثانية.","يحكي بلهجة مصرية لمدة 5 دقايق.","يعمل روحو مذيع أخبار ويحكي على الشلّة.","يضحك ضحكة شرير لمدة دقيقة.","يمثّل كيفاش يتصرّف كي يشوف الـ Crush متاعو.","يعمل إعلان إشهاري على صباطو.","يقلّد طفل صغير يطلب فلوس من أمّه.","يحكي مع قرعة ماء وكأنّها حبيبتو.","يمشي مشية عارض أزياء.","يغنّي أغنية حزينة على قطعة بيتزا.","يقلّد ديك يصيح في الصباح.","يعمل خطاب رسمي على علاش هو مهبول.","يحكي لمدة دقيقة من غير ما يضحك.","يعمل روحو روبوت تعطّل.","يقلّد أستاذ غاضب.","يعمل مقابلة صحفية مع كرسي.","يمثّل واحد ربح مليار وبعد خسرهم.","يعمل نشرة جوية على طقس الغرفة."]},
+roast:{label:"😈 ترييش",items:[
+"كل واحد في الشلّة يعطيه لقب مضحك.","يقلّد أكثر واحد يحكي برشة في المجموعة.","يحكي على أكثر عادة غريبة عندو.","يعمل Roast لروحو لمدة 30 ثانية.","يقلّد طريقة مشية واحد من أصحابه.","يقول 3 حاجات يعملهم ويستحق عليهم الترييش.","يعمل روحو مشهور ويعطي تصريح للصحافة.","يفسّر علاش هو أكثر واحد درامي في الشلّة.","يقلّد كيفاش يتصرّف كي يخسر في لعبة.","يحكي على أكثر كذبة صغيرة قالها وتكشف فيها.","يعمل خطاب اعتذار على أكثر غلطة مضحكة عملها.","يقلّد أكثر واحد يتغشش بسرعة.","يفسّر علاش ما ينجمش يعيش نهار من غير تليفونو.","يعمل محكمة وهمية ويحاكم روحو.","يختار صاحبو ويقلّد ضحكتو.","يعمل روحو Influencer ويعمل إعلان على منديل.","يقول جملة رومانسية بصوت إنسان آلي.","يعمل مناظرة مع صاحبو على موضوع تافه.","يفسّر علاش يستحق لقب «ملك التبهليل».","يقبل التحدّي باش الشلّة تخترعله لقب لبقية القعدة."]},
+shy:{label:"🔥 محرجة",items:[
+"يحكي على أكثر موقف محرج صارلو.","يقول شنوّة كان أوّل انطباع عندو على الشخص اللي على يسارو.","يحكي على أكثر حاجة يخجل منها.","يقول شنوّة أكثر حاجة تضحّكو في روحو.","يذكر أغرب حلم يتذكّرو.","يعترف بأكثر موضة ندم اللي تبعها.","يحكي على موقف تصرّف فيه كأنّه فاهم وهو ما فهم شي.","يمثّل كيفاش يتصرّف كي يتكسّف.","يقول 3 حاجات ما يعرفوهمش عليه أصحابه، إذا يحب.","يحكي على أكثر موقف عمل فيه روحو شجاع وهو خايف.","يجاوب على سؤال صراحة يختاروه أصحابو، أو يبدّلوه بتحدّي.","يقول شكون أكثر واحد في الشلّة ينجّم يضحّكو.","يحكي على أكثر رسالة ندم اللي بعثها، من غير ما يكشف أسرار حد.","يعمل اعتراف درامي على حاجة تافهة.","يمثّل كيفاش يكون كي يغير.","يقول أكثر كلمة يكرّرها من غير ما يشعر.","يحكي على أكثر موقف فهم فيه حاجة بالغلط.","يقلّد روحو كي يكون متوتر.","يحكي على أكثر قرار عفوي عملو.","يعمل خطاب يفسّر فيه علاش يستحق جائزة «أكثر واحد محرج»."]},
+hard:{label:"💀 قوية",items:[
+"يعمل Stand-up Comedy على روحو لمدة دقيقة.","يخلي المجموعة تختارلو موضوع يرتجل عليه أغنية.","يعمل خطاب حبّ لكرسي وكأنّه حبّ حياتو.","يمثّل مشهد انفصال درامي مع قرعة ماء.","يقلّد 3 أشخاص من الشلّة، والبقية يخمّنوا شكون.","يعمل إعلان على روحو وكأنّه منتوج في السوق.","يحكي حكاية عادية بصوت معلّق مباراة كرة قدم.","يعمل محاكمة لروحو على جريمة أكل آخر قطعة بيتزا.","يقول جملة عادية بـ5 مشاعر مختلفة: فرح، غضب، خوف، حزن، غيرة.","يعمل فيديو خيالي كأنّه يوتيوبر عندو مليون متابع.","يمثّل كيفاش يطلب زيادة في المصروف من باباه.","يعمل خطاب انتخابي باش يولي رئيس الشلّة.","يفسّر لصاحبو علاش هوما زوز لازمهم برنامج تلفزيوني.","يعمل مشهد غيرة على تليفون صاحبو.","يجاوب على 5 أسئلة متتالية من غير ما يقول «إي» ولا «لا».","يخترع لقب وعبارة مشهورة لكل واحد في المجموعة.","يعمل مشهد أكشن باستعمال مخدّة فقط.","يغنّي أغنية أطفال وكأنّها أغنية حزينة.","يعمل اعتذار رسمي للمجموعة على تهمة «التبهليل الزايد».","😈 العقوبة النهائية: المجموعة تختار 3 عقوبات من القائمة، وهو يختار وحدة ينفّذها قدّام الجميع!"]},
+phys:{label:"🤣 بدنية",items:[
+"اعمل 10 Squats وإنت تغنّي.","قف على ساق وحدة لمدة 30 ثانية.","امشي كي البطريق لمدة دقيقة. 🐧","امشي 10 خطوات وإنت حاطط كتاب فوق راسك.","اعمل 5 دورات بطيئة حول روحك، وبعد حاول تمشي في خط مستقيم.","اقعد في وضعية الكرسي على الحيط لمدة 20 ثانية.","امشي كي السلطعون لمدة 15 ثانية.","اقفز في بلاصتك 15 مرّة.","امشي على رؤوس صوابعك لمدة 30 ثانية.","امشي على كعبيك لمدة 20 ثانية.","اعمل 10 خطوات بالـ Slow Motion.","اقعد وانزل للنهوض 10 مرّات.","حاول تلمس ركبتك اليمنى بكوعك اليسار 10 مرّات.","اعمل 10 حركات Jumping Jacks.","امشي كي الروبوت لمدة دقيقة.","حاول تبقى ثابت كي التمثال لمدة 45 ثانية.","اعمل 5 خطوات كبيرة و5 خطوات صغيرة بالتناوب.","اقفز فوق خط وهمي 15 مرّة.","امشي في بلاصتك وإنت ترفع ركبتيك عالي لمدة 30 ثانية.","اعمل وضعية بطل خارق لمدة 20 ثانية. 🦸",
+"ارقص لمدة 30 ثانية من غير موسيقى.","ارقص Salsa مع كرسي.","اعمل رقصة روبوت لمدة دقيقة.","ارقص كي جدّك في عرس. 😂","ارقص باليدين فقط لمدة 30 ثانية.","ارقص بالساقين فقط من غير ما تحرّك يديك برشة.","اعمل رقصة TikTok من اختيار الشلّة.","ارقص كي البطريق.","اعمل رقصة بطيئة مع مخدّة.","ارقص وكأنّ الأرض سخونة.","اعمل رقصة فرحة واحد ربح مليار.","ارقص كي واحد نعسان برشة.","بدّل 5 حركات رقص في 15 ثانية.","ارقص وكأنّك في كليب راب.","اعمل رقصة من غير ما تحرّك ساقيك.","ارقص وكأنّك في عرس تونسي. 💃","اعمل رقصة بالكتاف فقط.","ارقص وكأنّك تحت الماء.","اعمل رقصة انتصار لمدة 20 ثانية.","ارقص وإنت تحاول تبقى جادّ وما تضحكش.",
+"امشي كي القرد لمدة 20 ثانية.","اقفز كي الأرنب 10 مرّات.","امشي كي البطّة.","قلّد مشية البطريق.","اعمل روحك حصان يجري في بلاصتو.","قلّد قطّة تتمطّى بعد النوم.","امشي كي الدبّ ببطء.","قلّد كلب فرحان يشوف صاحبو.","تحرّك كي سلحفاة لمدة 30 ثانية.","قلّد ديك يصيح ويفيق الناس.","امشي كي فلامنغو على ساق وحدة.","قلّد قفزات كنغر 10 مرّات.","تحرّك كي سمكة تسبح.","قلّد طاووس يستعرض ريشو.","اعمل روحك أسد داخل للغابة.","قلّد قرد يحاول يسرق موزة.","امشي كي جمل في الصحراء.","قلّد دجاجة تجري وراء حبّة قمح.","اعمل روحك فيل يمشي ببطء.","قلّد حيوان تختارو الشلّة لمدة 30 ثانية. 🦁",
+"اعمل 10 Squats وإنت تقول اسم كل واحد في الشلّة.","حاول توقف على ساق وحدة وإنت تضحّك أصحابك.","امشي في خط مستقيم وإنت تعمل حركات روبوت.","اعمل 5 Squats وإنت تتكلّم بصوت طفل.","حطّ يديك فوق راسك وامشي 20 خطوة.","اعمل 10 حركات رياضية وإنت تقلّد معلّق كرة قدم.","اقعد على كرسي وانهض 10 مرّات من غير ما تستعمل يديك.","امشي 15 ثانية وإنت تقلّد عارض أزياء.","اعمل 5 قفزات خفيفة وإنت تصفّق.","حاول توازن مخدّة فوق راسك وتمشي 10 خطوات.","اعمل وضعية تمثال مضحك لمدة 30 ثانية.","امشي كي واحد لابس صباط كبير برشة.","اعمل 10 حركات بالكتاف وكأنّك ترقص في ديسكو.","تحرّك في Slow Motion لمدة دقيقة.","اعمل 5 خطوات وكأنّك تمشي فوق الجليد.","اعمل حركة فرحة بعد كل Squat من 5 Squats.","حاول تمشي وكتاب فوق راسك وإنت تبتسم.","مثّل واحد فاق متأخّر ويجري باش يلحق الامتحان.","اعمل 10 خطوات رياضية وإنت تقول «أنا بطل العالم».","امشي كي واحد يربح في سباق، من غير ما تجري فعليًّا. 🏆",
+"نافس صاحبك: شكون يبقى على ساق وحدة أكثر وقت؟","اعملوا مسابقة تمثال: آخر واحد يتحرّك يربح.","تنافسوا في تقليد أحسن رقصة بطريق.","شكون يعمل أحسن مشية عارض أزياء؟","كل واحد يقلّد حيوان، والبقية يخمّنوا.","نافس صاحبك في 10 Squats مع الحفاظ على التوازن.","اعملوا مسابقة أحسن وضعية بطل خارق.","شكون يقلّد روبوت بطريقة أضحك؟","تنافسوا شكون يوازن كتاب فوق راسو ويمشي أبعد مسافة.","كل واحد يعمل رقصة، والبقية يقلّدوه.","اعملوا مسابقة أحسن حركة Slow Motion.","شكون يقلّد أستاذ رياضة بطريقة أضحك؟","نافسوا في الوقوف على رؤوس الصوابع لمدة 20 ثانية.","كل واحد يمشي كي حيوان تختاروهولو.","شكون يعمل أكثر Jumping Jacks في 20 ثانية، حسب قدرته؟","اعملوا مسابقة أحسن رقصة من غير موسيقى.","شكون يمثّل أحسن واحد يربح في اللوتو؟","كل واحد يعمل 3 حركات رياضية مضحكة وراء بعضهم.","تحدّي المرآة: واحد يعمل حركات والثاني يقلّدو لمدة 30 ثانية.","💀 التحدّي النهائي: الشلّة تختارلك 3 تحدّيات من القائمة، وتعملهم وراء بعضهم!",
+"يحاول يلمس أنفو بلسانو.","يعمل 5 وضعيات تصوير مضحكة.","يعمل 5 تعابير وجه مختلفة في 10 ثوانٍ.","يعمل مشية ملك يدخل للقصر."]}
+};
+
+const TALK_SECONDS=180, TOTAL_GAMES=4, RING=339.29;
+const COLORS=["#ff4d5e","#ff9f43","#f7c948","#2ee59d","#35c4f0","#8b7bff","#ff6bcb","#a3e635","#f97316","#14b8a6","#6366f1","#ec4899","#84cc16","#06b6d4","#e11d48"];
+const $=id=>document.getElementById(id);
+const SCREENS=['setup','names','game','talk','vote','result','verdict'];
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const rnd=n=>Math.floor(Math.random()*n);
+const LANGS=[["🇹🇳","بالتونسي","rtl"],["🇦🇪","بالعربية","rtl"],["🇬🇧","English","ltr"]];
+
+let nP=5, impCount=1, impCustom=false, savedNames=[];
 let players=[], scores=[], imposters=[], alive=[], votedImp=new Set();
-let currentWord=["","",""], wordLang=[], currentWord_="", currentIndex=0, round=1;
+let currentWord=["","","",""], currentIndex=0, round=1;
 let voters=[], voterPos=0, votes=[];
 let timeLeft=TALK_SECONDS, tick=null, gameNo=1, firstCaught=false;
-const TOTAL_GAMES=4;
-const AHKEM=["تغنّي أغنية بصوت عالي قدّام الكل 🎤","تعمل 20 تمرين ضغط 💪","تقلّد القطوس وتموّ لمدة دقيقة 🐱","تحكي نكتة، وكان حتى واحد ما ضحكش تعاود 😅","تغسل الصحون بعد الماكلة 🍽️","تشري القهوة للجماعة ☕","تحكي بالفرنساوي كان لمدة 10 دقايق 🇫🇷","تعمل رقصة غريبة قدّام الكل 💃","تمدح كل واحد من الجماعة بجملة حلوة 🥰","تعيّط للجماعة «سي فلان» بصوت جبّاد كل ما يحكي 😂","تمشي كيف البطريق لين الباب 🐧","تتصوّر سيلفي بوجه مضحك وتخليها ستوري 📸","تحكي سرّ صغير ما عمرك حكيتو 🤫","تقرا مقطع من كتاب بصوت مذيع نشرة الأخبار 📰"];
+let usedWords=[], startedSet=new Set(), lastStarter=-1, lastOut=-1, cat='all';
 
-const $ = id => document.getElementById(id);
-const SCREENS = ['count','names','game','talk','vote','result','verdict'];
-function show(name){ SCREENS.forEach(s => $('screen-'+s).classList.toggle('hidden', s!==name)); }
+function show(n){
+  SCREENS.forEach(s=>$('screen-'+s).classList.toggle('hidden',s!==n));
+  if(n==='game') $('screen-game').style.display='flex';
+  document.body.classList.toggle('compact',n!=='setup');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function av(i,cls=''){ const ch=Array.from(players[i]||String(i+1))[0]; return `<span class="av ${cls}" style="--c:${COLORS[i%COLORS.length]}">${esc(ch)}</span>`; }
+function toast(t){ const e=$('toast'); e.textContent=t; e.classList.add('on'); clearTimeout(toast.t); toast.t=setTimeout(()=>e.classList.remove('on'),2200); }
+function buzz(p){ try{navigator.vibrate&&navigator.vibrate(p);}catch(e){} }
+function confetti(list){
+  for(let i=0;i<34;i++){ const s=document.createElement('span'); s.className='fx'; s.textContent=list[rnd(list.length)];
+    s.style.left=Math.random()*100+'vw'; s.style.animationDuration=(2.2+Math.random()*2)+'s'; s.style.animationDelay=(Math.random()*.8)+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),5200); }
+}
 
-$('btnToNames').onclick = () => {
-  let n = parseInt($('count').value,10); if(!n||n<3) n=3; if(n>15) n=15;
-  $('count').value = n; $('namesList').innerHTML='';
-  for(let i=1;i<=n;i++){
+/* ---------- Setup ---------- */
+const maxImp=n=>Math.max(1,Math.floor((n-1)/2));
+const autoImp=n=>n>=10?4:n>=8?3:n>=6?2:1;
+function renderSetup(){
+  $('vPlayers').textContent=nP; $('vImp').textContent=impCount;
+  $('impHint').textContent=`من 1 لين ${maxImp(nP)} · المقترح ${autoImp(nP)}`;
+}
+function setPlayers(n){ nP=Math.min(15,Math.max(3,n)); impCount=impCustom?Math.min(impCount,maxImp(nP)):autoImp(nP); renderSetup(); }
+$('pPlus').onclick=()=>setPlayers(nP+1); $('pMinus').onclick=()=>setPlayers(nP-1);
+$('iPlus').onclick=()=>{ impCount=Math.min(maxImp(nP),impCount+1); impCustom=true; renderSetup(); };
+$('iMinus').onclick=()=>{ impCount=Math.max(1,impCount-1); impCustom=true; renderSetup(); };
+renderSetup();
+
+$('btnToNames').onclick=()=>{
+  const box=$('namesList'); box.innerHTML='';
+  for(let i=0;i<nP;i++){
     const r=document.createElement('div'); r.className='namefield';
-    r.innerHTML=`<span>${i}</span><input type="text" class="pInput" placeholder="لاعب ${i}">`;
-    $('namesList').appendChild(r);
+    r.innerHTML=`<span class="av" style="--c:${COLORS[i%COLORS.length]}">${i+1}</span><input type="text" class="pInput" placeholder="لاعب ${i+1}" value="${esc(savedNames[i]||'')}">`;
+    box.appendChild(r);
   }
   show('names');
 };
-$('btnBackCount').onclick = () => show('count');
-$('btnStart').onclick = () => {
-  players = Array.from(document.querySelectorAll('.pInput')).map((el,i)=>el.value.trim()||`لاعب ${i+1}`);
-  scores = players.map(()=>0); gameNo=1;
+$('btnBackCount').onclick=()=>{ savedNames=[...document.querySelectorAll('.pInput')].map(e=>e.value); show('setup'); };
+$('btnStart').onclick=()=>{
+  savedNames=[...document.querySelectorAll('.pInput')].map(e=>e.value);
+  players=savedNames.map((v,i)=>v.trim()||`لاعب ${i+1}`);
+  scores=players.map(()=>0); gameNo=1; usedWords=[];
   startRound();
 };
-$('btnRestart').onclick = () => { stopTimer(); show('count'); };
-$('btnNewWord').onclick = () => { gameNo++; startRound(); };
+$('btnRestart').onclick=()=>{ stopTimer(); show('setup'); };
+$('btnNewWord').onclick=()=>{ gameNo++; startRound(); };
 
-function numImposters(){ const n=players.length; return n>=10?4 : n>=8?3 : n>=6?2 : 1; }
-
+/* ---------- Round setup ---------- */
+function pickWord(){
+  if(usedWords.length>=WORDS.length-1) usedWords=[];
+  let i; do{ i=rnd(WORDS.length); }while(usedWords.includes(i));
+  usedWords.push(i); return WORDS[i];
+}
+function resetRoundState(){
+  currentWord=pickWord(); firstCaught=false; alive=players.map(()=>true);
+  votedImp=new Set(); round=1; currentIndex=0; startedSet=new Set(); lastStarter=-1;
+}
 function startRound(){
   stopTimer();
   const idx=[...Array(players.length).keys()]; imposters=[];
-  for(let k=0;k<numImposters();k++) imposters.push(idx.splice(Math.floor(Math.random()*idx.length),1)[0]);
-  currentWord = WORDS[Math.floor(Math.random()*WORDS.length)];
-  const inn=idx.slice().sort(()=>Math.random()-.5), off=Math.floor(Math.random()*3); wordLang=players.map(()=>0);
-  inn.forEach((p,k)=>{ wordLang[p]=(k+off)%3; });
-  firstCaught=false; alive = players.map(()=>true); votedImp = new Set(); round = 1; currentIndex = 0;
-  renderPlayer(); show('game');
+  for(let k=0;k<impCount;k++) imposters.push(idx.splice(rnd(idx.length),1)[0]);
+  resetRoundState(); renderPlayer(); show('game');
 }
+function changeWord(){           // same imposters, new word, instantly
+  stopTimer(); resetRoundState(); renderPlayer(); show('game');
+  toast('🔄 كلمة جديدة! كل واحد يشوف دوره من جديد'); buzz(60);
+}
+$('btnChangeWord').onclick=changeWord; $('btnChangeWord2').onclick=changeWord;
 
 function renderPlayer(){
-  $('currentPlayerName').textContent = players[currentIndex];
-  $('progressText').textContent = `اللاعب ${currentIndex+1} من ${players.length}`;
-  $('playersLeftBadge').textContent = `اللعبة ${gameNo}/${TOTAL_GAMES} — ` + (numImposters()===1 ? "دخيل واحد" : numImposters()+" دخلاء");
+  $('curAv').innerHTML=av(currentIndex);
+  $('currentPlayerName').textContent=players[currentIndex];
+  $('progressText').textContent=`اللاعب ${currentIndex+1} من ${players.length}`;
+  $('badgeGame').textContent=`اللعبة ${gameNo}/${TOTAL_GAMES}`;
+  $('badgeImp').textContent=impCount===1?'🕵️ دخيل واحد':`🕵️ ${impCount} دخلاء`;
   $('placeholderCard').classList.remove('hidden'); $('revealCard').classList.add('hidden');
 }
-
-$('btnReveal').onclick = () => {
-  const imp = imposters.includes(currentIndex);
-  $('revealCard').classList.toggle('imposter', imp);
-  $('revealTop').textContent = imp ? "دورك:" : "الكلمة السرية:";
-  if(imp){ $('revealMain').textContent = "أنت الدخيل 🕵️"; }
-  else { $('revealMain').innerHTML = LANGS.map((L,i)=>`<div style="font-size:1.5rem;margin:6px 0" dir="${i===2?'ltr':'rtl'}"><small style="opacity:.75;font-size:.8rem">${L[0]} ${L[1]}</small><br>${esc(currentWord[i])}</div>`).join(''); }
-  $('placeholderCard').classList.add('hidden'); $('revealCard').classList.remove('hidden');
+$('btnReveal').onclick=()=>{
+  const imp=imposters.includes(currentIndex);
+  $('revealCard').classList.toggle('imposter',imp);
+  $('revealTop').textContent=imp?'دورك:':'الكلمة السرّية:';
+  $('revealMain').innerHTML=imp
+    ?`<div class="emoji">🕵️</div><div class="big">أنت الدخيل!</div><div class="small" style="margin-top:8px">افهم الكلمة من كلامهم وتخبّى... وكان يكشفوك عندك فرصة أخيرة تخمّن الكلمة 🎯</div>`
+    :`<div class="emoji">${currentWord[3]||''}</div>`+LANGS.map((L,i)=>`<div class="line" dir="${L[2]}"><small>${L[0]} ${L[1]}</small>${esc(currentWord[i])}</div>`).join('');
+  $('placeholderCard').classList.add('hidden'); $('revealCard').classList.remove('hidden'); buzz(40);
 };
-$('btnHideNext').onclick = () => {
+$('btnHideNext').onclick=()=>{
   $('revealCard').classList.add('hidden'); $('placeholderCard').classList.remove('hidden');
   currentIndex++;
-  if(currentIndex >= players.length){ startTalk(); } else renderPlayer();
+  if(currentIndex>=players.length) startTalk(); else renderPlayer();
 };
 
-/* ---------- Discussion (3 min) ---------- */
-function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
-function stopTimer(){ if(tick){ clearInterval(tick); tick=null; } }
-function drawTimer(){ $('timer').textContent=fmt(timeLeft); $('timer').classList.toggle('low', timeLeft<=30); }
-
+/* ---------- Discussion ---------- */
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function stopTimer(){ if(tick){clearInterval(tick);tick=null;} }
+function drawTimer(){
+  $('timer').textContent=fmt(timeLeft);
+  $('ringFg').style.strokeDashoffset=RING*(1-timeLeft/TALK_SECONDS);
+  $('ring').classList.toggle('low',timeLeft<=30);
+}
+function pickStarter(){
+  const aliveIdx=players.map((_,i)=>i).filter(i=>alive[i]);
+  let pool=aliveIdx.filter(i=>!startedSet.has(i));
+  if(!pool.length){ startedSet=new Set(); pool=aliveIdx.filter(i=>i!==lastStarter); if(!pool.length) pool=aliveIdx; }
+  const s=pool[rnd(pool.length)]; startedSet.add(s); lastStarter=s; return s;
+}
 function startTalk(){
-  stopTimer(); timeLeft = TALK_SECONDS; drawTimer();
-  $('roundInfo').textContent = `الجولة ${round} — شكون الدخيل؟`;
-  $('btnTimer').textContent = '▶️ ابدأ 3 دقايق';
+  stopTimer(); timeLeft=TALK_SECONDS; $('ringFg').style.transition='none'; drawTimer(); setTimeout(()=>$('ringFg').style.transition='',60);
+  $('roundInfo').textContent=`الجولة ${round} — شكون الدخيل؟`;
+  $('btnTimer').textContent='▶️ ابدأ 3 دقايق';
+  const st=pickStarter(); $('starterName').textContent=players[st];
   const box=$('aliveChips'); box.innerHTML='';
-  players.forEach((p,i)=>{ const c=document.createElement('span'); c.className='chip'+(alive[i]?'':' dead'); c.textContent=p; box.appendChild(c); });
+  players.forEach((p,i)=>{ const c=document.createElement('span'); c.className='chip'+(alive[i]?'':' dead'); c.innerHTML=av(i,'sm')+esc(p); box.appendChild(c); });
   show('talk');
 }
-$('btnTimer').onclick = () => {
+$('btnTimer').onclick=()=>{
   if(tick){ stopTimer(); $('btnTimer').textContent='▶️ كمّل'; return; }
   $('btnTimer').textContent='⏸️ وقّف';
-  tick = setInterval(()=>{
+  tick=setInterval(()=>{
     timeLeft--; drawTimer();
-    if(timeLeft<=0){ stopTimer(); try{navigator.vibrate&&navigator.vibrate([300,100,300]);}catch(e){} startVote(); }
+    if(timeLeft<=0){ stopTimer(); buzz([300,100,300]); startVote(); }
   },1000);
 };
-$('btnToVote').onclick = () => { stopTimer(); startVote(); };
+$('btnToVote').onclick=()=>{ stopTimer(); startVote(); };
 
 /* ---------- Voting ---------- */
 function startVote(){
-  voters = players.map((_,i)=>i).filter(i=>alive[i]); voterPos=0; votes=[];
+  voters=players.map((_,i)=>i).filter(i=>alive[i]); voterPos=0; votes=[];
   renderVoter(); show('vote');
 }
 function renderVoter(){
-  const v = voters[voterPos];
-  $('voteProgress').textContent = `صوت ${voterPos+1} من ${voters.length}`;
-  $('voterName').textContent = players[v];
+  const v=voters[voterPos];
+  $('voteProgress').textContent=`صوت ${voterPos+1} من ${voters.length}`;
+  $('voterAv').innerHTML=av(v); $('voterName').textContent=players[v];
   const box=$('voteOptions'); box.innerHTML='';
   players.forEach((p,i)=>{
-    if(!alive[i] || i===v) return;
-    const b=document.createElement('button'); b.className='opt'; b.textContent=p;
+    if(!alive[i]||i===v) return;
+    const b=document.createElement('button'); b.className='vbtn'; b.innerHTML=av(i,'sm')+`<span>${esc(p)}</span>`;
     b.onclick=()=>castVote(v,i); box.appendChild(b);
   });
 }
 function castVote(v,target){
-  votes.push({v,target});
+  votes.push({v,target}); buzz(25);
   if(imposters.includes(target)) votedImp.add(v);
   voterPos++;
   if(voterPos<voters.length) renderVoter(); else tally();
 }
 
 /* ---------- Result ---------- */
-function tally(){
-  const counts = players.map(()=>0);
-  votes.forEach(x=>counts[x.target]++);
-  const max = Math.max(...counts);
-  const top = counts.map((c,i)=>c===max?i:-1).filter(i=>i>=0);
-  const chips=$('resultVotes'); chips.innerHTML='';
-  players.forEach((p,i)=>{ if(alive[i]){ const c=document.createElement('span'); c.className='chip'; c.textContent=`${p}: ${counts[i]} 🗳️`; chips.appendChild(c);} });
-  $('scoreBox').classList.add('hidden');
-  $('btnNewWord').classList.add('hidden'); $('btnRestart').classList.add('hidden'); $('btnVerdict').classList.add('hidden');
-  const msg=$('resultMsg'); msg.className='msg';
-
-  if(top.length>1){
-    msg.textContent = `تعادل في الأصوات! حتى واحد ما خرج. كملو النقاش 🔁`;
-    nextStep(()=>{ round++; startTalk(); }, '🗣️ كمّل المناقشة');
-    show('result'); return;
-  }
-  const out = top[0]; alive[out]=false;
-  if(imposters.includes(out) && round===1) firstCaught=true;
-  if(imposters.includes(out)){
-    const left = imposters.filter(i=>alive[i]).length;
-    if(left===0){
-      msg.innerHTML = `🎉 كشفتو الدخيل: <b>${esc(players[out])}</b><br>الكلمة كانت: <b>${wordAll()}</b><br><span class="win">الجماعة ربحت!</span>`;
-      finish('group'); return;
-    }
-    msg.innerHTML = `✅ <b>${esc(players[out])}</b> كان دخيل! أما باقي ${left} دخلاء مازالو.<br>كملو النقاش`;
-    nextStep(()=>{ round++; startTalk(); }, '🗣️ كمّل المناقشة');
-  } else {
-    const impLeft = imposters.filter(i=>alive[i]).length;
-    const citizensLeft = players.filter((_,i)=>alive[i]&&!imposters.includes(i)).length;
-    if(impLeft >= citizensLeft){
-      msg.innerHTML = `❌ <b>${esc(players[out])}</b> كان بريء!<br>الدخيل: <b>${imposters.map(i=>esc(players[i])).join('، ')}</b><br>الكلمة: <b>${wordAll()}</b><br><span class="lose">الدخلاء ربحو!</span>`;
-      finish('imposters'); return;
-    }
-    msg.innerHTML = `❌ <b>${esc(players[out])}</b> كان بريء وخرج من اللعبة!<br>مازال الدخيل بيناتكم... كملو`;
-    nextStep(()=>{ round++; startTalk(); }, '🗣️ جولة جديدة');
-  }
-  show('result');
-}
-function wordAll(){ return `<span dir="rtl">${esc(currentWord[0])}</span> · <span dir="rtl">${esc(currentWord[1])}</span> · <span dir="ltr">${esc(currentWord[2])}</span>`; }
-function esc(s){ return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+const wordAll=()=>`${currentWord[3]||''} <span dir="rtl">${esc(currentWord[0])}</span> · <span dir="rtl">${esc(currentWord[1])}</span> · <span dir="ltr">${esc(currentWord[2])}</span>`;
 function nextStep(fn,label){ const b=$('btnContinue'); b.textContent=label; b.classList.remove('hidden'); b.onclick=fn; }
+function resetResultUI(){
+  ['scoreBox','judgeBox','btnNewWord','btnRestart','btnVerdict','btnContinue'].forEach(id=>$(id).classList.add('hidden'));
+}
+function tally(){
+  const counts=players.map(()=>0); votes.forEach(x=>counts[x.target]++);
+  const max=Math.max(...counts); const top=counts.map((c,i)=>c===max?i:-1).filter(i=>i>=0);
+  const box=$('resultVotes'); box.innerHTML='';
+  const mx=Math.max(1,max);
+  players.forEach((p,i)=>{ if(alive[i]){ const r=document.createElement('div');
+    r.innerHTML=`<div class="vrow">${av(i,'sm')}<span class="nm">${esc(p)}</span><span class="n">${counts[i]} 🗳️</span></div><div class="vbar"><i style="width:${counts[i]/mx*100}%"></i></div>`; box.appendChild(r);} });
+  resetResultUI();
+  const msg=$('resultMsg'); msg.className='msg';
+  if(top.length>1){
+    msg.textContent='تعادل في الأصوات! حتى واحد ما خرج. كملو النقاش 🔁';
+    nextStep(()=>{round++;startTalk();},'🗣️ كمّل المناقشة'); show('result'); return;
+  }
+  const out=top[0]; alive[out]=false;
+  if(imposters.includes(out)&&round===1) firstCaught=true;
+  if(imposters.includes(out)){ askJudge(out); show('result'); return; }
+  const impLeft=imposters.filter(i=>alive[i]).length;
+  const citLeft=players.filter((_,i)=>alive[i]&&!imposters.includes(i)).length;
+  if(impLeft>=citLeft){
+    msg.innerHTML=`❌ <b>${esc(players[out])}</b> كان بريء!<br>الدخيل: <b>${imposters.map(i=>esc(players[i])).join('، ')}</b><br>الكلمة: <b>${wordAll()}</b><br><span class="lose">الدخلاء ربحو!</span>`;
+    finish('imposters'); return;
+  }
+  msg.innerHTML=`❌ <b>${esc(players[out])}</b> كان بريء وخرج من اللعبة!<br>مازال الدخيل بيناتكم... كملو`;
+  nextStep(()=>{round++;startTalk();},'🗣️ جولة جديدة'); show('result');
+}
+
+/* Caught imposter: the host judges his guess */
+function askJudge(out){
+  lastOut=out;
+  $('resultMsg').innerHTML=`🕵️ <b>${esc(players[out])}</b> كان دخيل!<br>عندو فرصة أخيرة: يكتب الكلمة السرّية باش يربّح الدخلاء 🎯`;
+  $('guessInput').value=''; $('secretBox').classList.add('hidden'); $('btnShowWord').classList.remove('hidden');
+  $('judgeBox').classList.remove('hidden'); buzz(80);
+}
+$('btnShowWord').onclick=()=>{
+  $('secretBox').innerHTML=`<div class="emoji">${currentWord[3]||''}</div>`+LANGS.map((L,i)=>`<div class="l" dir="${L[2]}">${L[0]} ${esc(currentWord[i])}</div>`).join('');
+  $('secretBox').classList.remove('hidden'); $('btnShowWord').classList.add('hidden');
+};
+function resolveImposter(out,prefix){
+  const msg=$('resultMsg'); const left=imposters.filter(i=>alive[i]).length;
+  $('judgeBox').classList.add('hidden');
+  if(left===0){
+    msg.innerHTML=`${prefix}🎉 كشفتو الدخيل: <b>${esc(players[out])}</b><br>الكلمة كانت: <b>${wordAll()}</b><br><span class="win">الجماعة ربحت!</span>`;
+    finish('group'); return;
+  }
+  msg.innerHTML=`${prefix}✅ <b>${esc(players[out])}</b> كان دخيل! أما باقي ${left} دخلاء مازالو.<br>كملو النقاش`;
+  nextStep(()=>{round++;startTalk();},'🗣️ كمّل المناقشة');
+}
+$('btnJudgeYes').onclick=()=>{
+  const g=$('guessInput').value.trim();
+  $('judgeBox').classList.add('hidden');
+  $('resultMsg').innerHTML=`🎯 <b>${esc(players[lastOut])}</b> ${g?`كتب «${esc(g)}» وكانت صحيحة`:'عرف الكلمة'}!<br>الكلمة: <b>${wordAll()}</b><br><span class="lose">الدخلاء ربحو اللعبة!</span>`;
+  finish('imposters');
+};
+$('btnJudgeNo').onclick=()=>resolveImposter(lastOut,'❌ الكلمة غالطة!<br>');
 
 let deltas=[];
 function finish(winner){
-  deltas = players.map((_,i)=>{
-    const imp = imposters.includes(i);
-    if(winner==='group'){
-      if(firstCaught) return imp ? -2 : 3+(votedImp.has(i)?1:0);
-      return imp ? 2 : 1+(votedImp.has(i)?1:0);
-    }
-    return imp ? 5 : -4;
+  deltas=players.map((_,i)=>{
+    const imp=imposters.includes(i);
+    if(winner==='group'){ if(firstCaught) return imp?-2:3+(votedImp.has(i)?1:0); return imp?2:1+(votedImp.has(i)?1:0); }
+    return imp?5:-4;
   });
   deltas.forEach((d,i)=>scores[i]+=d);
   const body=$('scoreBody'); body.innerHTML='';
-  players.map((p,i)=>({p,s:scores[i],d:deltas[i]})).sort((a,b)=>b.s-a.s).forEach((r,k)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${k===0?'🏆 ':''}${esc(r.p)}</td><td>${r.s} <small>(${r.d>0?'+':''}${r.d})</small></td>`; body.appendChild(tr);
+  const medals=['🥇','🥈','🥉'];
+  players.map((p,i)=>({p,i,s:scores[i],d:deltas[i]})).sort((a,b)=>b.s-a.s).forEach((r,k)=>{
+    const el=document.createElement('div'); el.className='srow'+(k===0?' first':'');
+    el.innerHTML=`<span class="rk">${medals[k]||k+1}</span>${av(r.i,'sm')}<span class="nm">${esc(r.p)}${imposters.includes(r.i)?' 🕵️':''}</span><span class="pt">${r.s}</span><span class="d ${r.d>=0?'p':'n'}">${r.d>0?'+':''}${r.d}</span>`;
+    body.appendChild(el);
   });
-  $('gameInfo').textContent = `اللعبة ${gameNo} من ${TOTAL_GAMES}` + (firstCaught ? ' — كشفتو الدخيل في الجولة الأولى' : '');
-  $('scoreBox').classList.remove('hidden');
-  $('btnContinue').classList.add('hidden');
-  const last = gameNo>=TOTAL_GAMES;
-  $('btnNewWord').classList.toggle('hidden', last); $('btnVerdict').classList.toggle('hidden', !last);
+  $('gameInfo').textContent=`اللعبة ${gameNo} من ${TOTAL_GAMES}`+(winner==='group'&&firstCaught?' — كشفتو الدخيل في الجولة الأولى':'');
+  $('scoreBox').classList.remove('hidden'); $('btnContinue').classList.add('hidden'); $('judgeBox').classList.add('hidden');
+  const last=gameNo>=TOTAL_GAMES;
+  $('btnNewWord').classList.toggle('hidden',last); $('btnVerdict').classList.toggle('hidden',!last);
   $('btnRestart').classList.remove('hidden');
+  confetti(winner==='group'?['🎉','🏆','✨','🥳']:['🕵️','😈','🔥','💀']); buzz([120,60,120]);
   show('result');
 }
 
-/* ---------- Verdict after 4 games ---------- */
-$('btnVerdict').onclick = () => {
-  const min = Math.min(...scores);
-  const losers = players.filter((_,i)=>scores[i]===min);
-  $('vName').textContent = '👤 ' + losers.join(' + ') + ` (${min} نقطة)`;
-  giveHokm(); show('verdict');
+/* ---------- Verdict ---------- */
+function pool(){ return cat==='all'?Object.values(CH).flatMap(c=>c.items):CH[cat].items; }
+function renderCats(){
+  const box=$('cats'); box.innerHTML='';
+  [['all','🎰 الكل'],...Object.entries(CH).map(([k,v])=>[k,v.label])].forEach(([k,l])=>{
+    const b=document.createElement('button'); b.className='cat'+(cat===k?' on':''); b.textContent=l;
+    b.onclick=()=>{cat=k;renderCats();draw();}; box.appendChild(b);
+  });
+}
+let spinning=false;
+function draw(){
+  if(spinning) return; spinning=true; const el=$('vHokm'); el.classList.add('spin'); const p=pool(); let n=0;
+  const t=setInterval(()=>{ el.textContent=p[rnd(p.length)]; if(++n>=10){ clearInterval(t); el.classList.remove('spin'); spinning=false; buzz(80); } },90);
+}
+$('btnVerdict').onclick=()=>{
+  const min=Math.min(...scores); const box=$('loserChips'); box.innerHTML='';
+  players.forEach((p,i)=>{ if(scores[i]===min){ const c=document.createElement('span'); c.className='chip'; c.innerHTML=av(i,'sm')+esc(p)+` (${min})`; box.appendChild(c);} });
+  $('vHokm').textContent='اضغط على «اسحب حكم» 🎲'; cat='all'; renderCats(); draw(); show('verdict'); confetti(['🏛️','⚖️','😂','🤡']);
 };
-function giveHokm(){ $('vHokm').textContent = AHKEM[Math.floor(Math.random()*AHKEM.length)]; }
-$('btnOtherHokm').onclick = giveHokm;
-$('btnAgain').onclick = () => { scores = players.map(()=>0); gameNo=1; startRound(); };
-$('btnRestart2').onclick = () => { stopTimer(); show('count'); };
+$('btnOtherHokm').onclick=draw;
+$('btnAgain').onclick=()=>{ scores=players.map(()=>0); gameNo=1; startRound(); };
+$('btnRestart2').onclick=()=>{ stopTimer(); show('setup'); };
 </script>
 </body>
 </html>
